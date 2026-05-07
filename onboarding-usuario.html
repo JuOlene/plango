@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Montando seu Perfil - Plango</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: var(--bg-blue); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        
+        .onboarding-container {
+            background: var(--white);
+            max-width: 800px;
+            width: 100%;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-progress {
+            background: #F8FAFC;
+            padding: 20px 30px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .header-progress h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #E2E8F0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--orange);
+            width: 20%;
+            transition: width 0.4s ease;
+        }
+
+        .step-content {
+            padding: 40px 30px;
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .step-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        .step-desc {
+            color: var(--text-light);
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .form-input, .form-select {
+            padding: 12px 15px;
+            border: 1px solid #CBD5E1;
+            border-radius: var(--radius);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .chip {
+            padding: 10px 20px;
+            border: 1px solid #CBD5E1;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: 0.2s;
+            user-select: none;
+        }
+
+        .chip.selected {
+            background-color: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 30px;
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+        }
+
+        /* Preview Cards */
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .preview-card {
+            border: 1px solid #CBD5E1;
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .preview-card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .preview-card h4 { color: var(--primary-blue); margin-bottom: 5px; }
+        .preview-card p { font-size: 0.9rem; color: var(--text-light); }
+
+    </style>
+</head>
+<body>
+
+    <div class="onboarding-container">
+        <div class="header-progress">
+            <h2>Construindo sua Viagem</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Passo 1: Definição Básica -->
+        <div class="step-content active" id="step-1">
+            <h3 class="step-title">Definição Básica</h3>
+            <p class="step-desc">Vamos começar filtrando possibilidades irreais. Quais são os limites da sua viagem?</p>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Orçamento Total (R$)</label>
+                    <input type="number" class="form-input" placeholder="Ex: 5000">
+                </div>
+                <div class="form-group">
+                    <label>Duração da Viagem</label>
+                    <select class="form-select">
+                        <option>Fim de semana (2-3 dias)</option>
+                        <option>Curta (4-6 dias)</option>
+                        <option>1 Semana</option>
+                        <option>Mais de 10 dias</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Mês / Período Aproximado</label>
+                    <input type="month" class="form-input">
+                </div>
+            </div>
+        </div>
+
+        <!-- Passo 2: Perfil Comportamental -->
+        <div class="step-content" id="step-2">
+            <h3 class="step-title">Seu Perfil Comportamental</h3>
+            <p class="step-desc">Como você gosta de viajar? Escolha as opções que mais combinam com a sua vibe.</p>
+            
+            <div class="form-group" style="margin-bottom:20px;">
+                <label>Estilo de Viagem</label>
+                <div class="chips-container" onclick="toggleChip(event)">
+                    <div class="chip">Econômico</div>
+                    <div class="chip selected">Conforto</div>
+                    <div class="chip">Luxo</div>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:20px;">
+                <label>Ambiente Preferido</label>
+                <div class="chips-container" onclick="toggleChip(event)">
+                    <div class="chip selected">🏖️ Praia</div>
+                    <div class="chip">🏔️ Montanha</div>
+                    <div class="chip">🏙️ Cidade Grande</div>
+                    <div class="chip">🏡 Interior</div>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:20px;">
+                <label>Interesses e Experiências (Múltiplos)</label>
+                <div class="chips-container" onclick="toggleChip(event)">
+                    <div class="chip">Gastronomia</div>
+                    <div class="chip selected">Descanso Absoluto</div>
+                    <div class="chip">Cultura e Museus</div>
+                    <div class="chip">Vida Noturna</div>
+                    <div class="chip">Aventura Romântica</div>
+                    <div class="chip">Sem lugares muito cheios (Restrição)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Passo 3: Personalização Prática -->
+        <div class="step-content" id="step-3">
+            <h3 class="step-title">Refinamento Prático</h3>
+            <p class="step-desc">Ajuste os detalhes logísticos para não ter dor de cabeça depois.</p>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Tipo de Hospedagem Principal</label>
+                    <select class="form-select">
+                        <option>Pousada / Cama e Café</option>
+                        <option>Hotel Tradicional</option>
+                        <option>Resort All-Inclusive</option>
+                        <option>Hostel / Compartilhado</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Alimentação</label>
+                    <select class="form-select">
+                        <option>Com Café da Manhã</option>
+                        <option>Pensão Completa</option>
+                        <option>Apenas Hospedagem</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Transporte no Destino</label>
+                    <select class="form-select">
+                        <option>Carro Alugado</option>
+                        <option>Uber / Táxi</option>
+                        <option>Transporte Público (Mais barato)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Passeios</label>
+                    <select class="form-select">
+                        <option>Quero passeios guiados</option>
+                        <option>Faço meu próprio roteiro</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Passo 4: Prévia Inteligente -->
+        <div class="step-content" id="step-4">
+            <h3 class="step-title">Prévia Inteligente</h3>
+            <p class="step-desc">Baseado no seu perfil, encontramos estes cenários compatíveis. Qual chama mais atenção?</p>
+            
+            <div class="preview-grid">
+                <div class="preview-card" style="border-color: var(--primary-blue);">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🌴</div>
+                    <h4>Rota do Sol (Nordeste)</h4>
+                    <p>Pousadas charmosas, praia tranquila e gastronomia local.</p>
+                    <p style="margin-top:10px; font-weight:bold; color:var(--orange);">Dentro do orçamento</p>
+                </div>
+                <div class="preview-card">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🍷</div>
+                    <h4>Serra Romântica (Sul)</h4>
+                    <p>Conforto térmico, vinhos e passeios exclusivos.</p>
+                    <p style="margin-top:10px; font-weight:bold; color:var(--text-light);">No limite do orçamento</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Passo 5: Exploração Opcional -->
+        <div class="step-content" id="step-5">
+            <h3 class="step-title">Exploração (Opcional)</h3>
+            <p class="step-desc">Quer testar o impacto de algumas escolhas no seu orçamento antes de finalizar?</p>
+            
+            <div style="background: #F8FAFC; padding: 20px; border-radius: var(--radius); border: 1px solid #E2E8F0; margin-bottom: 20px;">
+                <p style="margin-bottom: 15px;">Simulador de Custo Rápido:</p>
+                <label style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <input type="checkbox" checked> Adicionar Transfer Privativo do Aeroporto (+ R$ 150)
+                </label>
+                <label style="display:flex; align-items:center; gap:10px;">
+                    <input type="checkbox"> Ficar 1 dia a mais (+ R$ 400 estimativa)
+                </label>
+                <p style="margin-top: 20px; font-weight: bold; color: var(--primary-blue);">Orçamento Projetado Atual: R$ 4.850</p>
+            </div>
+        </div>
+
+        <!-- Ações do Wizard -->
+        <div class="actions">
+            <button class="btn-secondary" id="btn-prev" onclick="prevStep()" style="visibility: hidden;">Voltar</button>
+            <button class="btn-primary" id="btn-next" onclick="nextStep()">Avançar para o Próximo Passo</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        function updateUI() {
+            // Atualiza barra de progresso
+            document.getElementById('progress-fill').style.width = `${(currentStep / totalSteps) * 100}%`;
+
+            // Mostra/esconde passos
+            document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+
+            // Atualiza botões
+            document.getElementById('btn-prev').style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+            
+            const btnNext = document.getElementById('btn-next');
+            if (currentStep === totalSteps) {
+                btnNext.innerText = 'Consolidar e Gerar Roteiro Completo ✨';
+                btnNext.classList.add('btn-orange');
+                btnNext.onclick = function() {
+                    window.location.href = 'painel-usuario.html';
+                };
+            } else {
+                btnNext.innerText = 'Avançar para o Próximo Passo';
+                btnNext.classList.remove('btn-orange');
+                btnNext.onclick = nextStep;
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateUI();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateUI();
+            }
+        }
+
+        // Lógica simples para seleção de chips (tags)
+        function toggleChip(e) {
+            if(e.target.classList.contains('chip')) {
+                e.target.classList.toggle('selected');
+            }
+        }
+    </script>
+</body>
+</html>

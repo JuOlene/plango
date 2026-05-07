@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel da Empresa - Plango</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #F1F5F9; }
+        .dashboard-container { display: flex; min-height: 100vh; }
+        
+        .sidebar {
+            width: 280px;
+            background: var(--white);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-logo { margin-bottom: 40px; text-align: center; }
+        .sidebar-menu { list-style: none; flex: 1; }
+        .sidebar-menu li { margin-bottom: 15px; }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: var(--bg-blue);
+            color: var(--orange);
+        }
+
+        .sidebar-menu .icon { margin-right: 15px; font-size: 1.2rem; }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--orange);
+            color: white;
+            padding: 15px 30px;
+            border-radius: var(--radius);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(242, 100, 25, 0.2);
+        }
+
+        .stat-card span { font-size: 0.9rem; opacity: 0.9; }
+        .stat-card h2 { color: var(--white); margin: 0; font-family: 'Outfit'; font-size: 2rem; }
+
+        .view-section { display: none; animation: fadeIn 0.4s; }
+        .view-section.active { display: block; }
+
+        /* Feed de Demandas */
+        .demand-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--primary-blue);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .demand-info h4 { color: var(--text-dark); font-size: 1.2rem; margin-bottom: 5px; }
+        .demand-info p { color: var(--text-light); margin-bottom: 10px; }
+        .demand-tags { display: flex; gap: 10px; }
+        .tag { background: var(--bg-blue); color: var(--primary-blue); padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+
+        /* Chat UI */
+        .chat-container {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: var(--primary-blue);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #F8FAFC;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 15px;
+            border-radius: var(--radius);
+        }
+
+        .msg-client {
+            background: #E2E8F0;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+
+        .msg-business {
+            background: var(--bg-blue);
+            color: var(--primary-blue);
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 20px;
+            border-top: 1px solid #E2E8F0;
+            background: var(--white);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #CBD5E1;
+            border-radius: var(--radius) 0 0 var(--radius);
+            outline: none;
+            font-family: 'Outfit';
+        }
+
+        .chat-input button {
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin: 0;
+        }
+
+        /* Dados Estratégicos */
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .data-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .bar-chart { margin-top: 20px; }
+        .bar-row { margin-bottom: 15px; }
+        .bar-label { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-light); }
+        .bar-bg { width: 100%; background: #E2E8F0; height: 10px; border-radius: 5px; overflow: hidden; }
+        .bar-fill { height: 100%; background: var(--orange); border-radius: 5px; }
+        .bar-fill.blue { background: var(--primary-blue); }
+
+        .btn-logout { margin-top: 30px; color: #E53E3E; text-decoration: none; font-weight: 600; text-align: center; display: block; padding: 10px; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg width="120" height="35" viewBox="0 0 160 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 38C10 38 18 32 25 32C32 32 38 38 38 38H10Z" fill="var(--primary-blue)"/>
+                    <path d="M7 40C7 40 16 38 24 38C32 38 41 40 41 40V42H7V40Z" fill="var(--primary-blue)"/>
+                    <path d="M20 32C20 32 18 20 12 18" stroke="var(--primary-blue)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M14 19C14 19 18 16 20 12" stroke="var(--primary-blue)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M14 19C14 19 12 15 8 16" stroke="var(--primary-blue)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M14 19C14 19 10 22 8 26" stroke="var(--primary-blue)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M28 33C28 33 32 24 39 23" stroke="var(--primary-blue)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M37 24C37 24 35 20 31 18" stroke="var(--primary-blue)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M37 24C37 24 40 21 44 23" stroke="var(--primary-blue)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M37 24C37 24 41 28 42 32" stroke="var(--primary-blue)" stroke-width="2" stroke-linecap="round"/>
+                    <text x="50" y="35" font-family="'Playfair Display', serif" font-size="28" font-weight="700" fill="var(--primary-blue)" letter-spacing="1">PLANGO</text>
+                </svg>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" onclick="switchView('visao-geral', this)"><span class="icon">📈</span> Visão Geral</a></li>
+                <li><a href="#" onclick="switchView('inteligencia', this)"><span class="icon">📊</span> Inteligência de Mercado</a></li>
+                <li><a href="#" onclick="switchView('demandas', this)"><span class="icon">🎯</span> Demandas e Match</a></li>
+                <li><a href="#" onclick="switchView('pacotes', this)"><span class="icon">📦</span> Gerador de Pacotes</a></li>
+                <li><a href="#" onclick="switchView('chat', this)"><span class="icon">💬</span> Relacionamento</a></li>
+                <li><a href="#" onclick="switchView('redes-sociais', this)"><span class="icon">📱</span> Redes Sociais</a></li>
+                <li><a href="#" onclick="switchView('campanhas', this)"><span class="icon">🚀</span> Campanhas e Automação</a></li>
+                <li><a href="#" onclick="switchView('reputacao', this)"><span class="icon">⭐</span> Reputação e Evolução</a></li>
+            </ul>
+            <a href="index.html" class="btn-logout">Sair do Painel</a>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <header class="dashboard-header">
+                <div>
+                    <h2>Painel Estratégico</h2>
+                    <p class="text-light">Gerencie suas ofertas, entenda o mercado e cresça com a Plango.</p>
+                </div>
+                <div class="stat-card">
+                    <span>Taxa de Conversão Plango</span>
+                    <h2>32% 🚀</h2>
+                </div>
+            </header>
+
+            <!-- 1. Visão Geral -->
+            <section id="visao-geral" class="view-section active">
+                <h3 style="margin-bottom: 20px;">Resumo do seu Negócio</h3>
+                <div class="grid-3" style="margin-bottom: 40px;">
+                    <div class="data-card" style="border-left: 5px solid var(--primary-blue);">
+                        <h4>Interações Hoje</h4>
+                        <h2 style="color: var(--primary-blue); font-size:2rem; margin:10px 0;">14</h2>
+                        <p class="text-light">Usuários visualizaram seu perfil ou ofertas.</p>
+                    </div>
+                    <div class="data-card" style="border-left: 5px solid var(--orange);">
+                        <h4>Propostas Ativas</h4>
+                        <h2 style="color: var(--orange); font-size:2rem; margin:10px 0;">5</h2>
+                        <p class="text-light">Aguardando resposta dos clientes.</p>
+                        <button class="btn-secondary mt-2 w-100" onclick="document.querySelectorAll('.sidebar-menu a')[4].click()">Ver Relacionamento</button>
+                    </div>
+                    <div class="data-card" style="border-left: 5px solid #27AE60;">
+                        <h4>Seu Match Principal</h4>
+                        <p class="text-light mt-2">Você tem feito mais sucesso com <strong>Casais Jovens</strong> em busca de <strong>Natureza e Conforto</strong>.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Inteligência de Mercado -->
+            <section id="inteligencia" class="view-section">
+                <h3>Inteligência de Mercado 📊</h3>
+                <p style="margin-bottom: 20px; color:var(--text-light);">Acompanhe as tendências e o que os viajantes mais procuram na sua região.</p>
+                
+                <div class="data-grid">
+                    <div class="data-card">
+                        <h4 style="color: var(--primary-blue);">Filtros Mais Buscados na Região</h4>
+                        <div class="bar-chart">
+                            <div class="bar-row">
+                                <div class="bar-label"><span>Pousadas com Café Incluso</span> <span style="color:#27AE60;">Em alta (+15%)</span></div>
+                                <div class="bar-bg"><div class="bar-fill blue" style="width: 85%;"></div></div>
+                            </div>
+                            <div class="bar-row">
+                                <div class="bar-label"><span>Roteiros Gastronômicos</span> <span>Estável</span></div>
+                                <div class="bar-bg"><div class="bar-fill" style="width: 60%;"></div></div>
+                            </div>
+                            <div class="bar-row">
+                                <div class="bar-label"><span>Ecoturismo Radical</span> <span style="color:#E53E3E;">Em queda (-5%)</span></div>
+                                <div class="bar-bg"><div class="bar-fill blue" style="width: 35%;"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-card">
+                        <h4 style="color: var(--primary-blue);">Orçamento Médio dos Usuários</h4>
+                        <div class="bar-chart">
+                            <div class="bar-row">
+                                <div class="bar-label"><span>Até R$ 2.000</span> <span>45%</span></div>
+                                <div class="bar-bg"><div class="bar-fill orange" style="width: 45%;"></div></div>
+                            </div>
+                            <div class="bar-row">
+                                <div class="bar-label"><span>R$ 2.000 a R$ 5.000</span> <span>40%</span></div>
+                                <div class="bar-bg"><div class="bar-fill blue" style="width: 40%;"></div></div>
+                            </div>
+                            <div class="bar-row">
+                                <div class="bar-label"><span>Acima de R$ 5.000</span> <span>15%</span></div>
+                                <div class="bar-bg"><div class="bar-fill blue" style="width: 15%;"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Demandas e Match -->
+            <section id="demandas" class="view-section">
+                <div style="margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <h3>Destaque por Compatibilidade (Match) 🎯</h3>
+                        <p class="text-light">Clientes buscando experiências que se alinham perfeitamente com sua oferta.</p>
+                    </div>
+                    <span class="tag" style="background:#27AE60; color:white;">Filtros Automáticos Ativos</span>
+                </div>
+
+                <div class="demand-card" style="border-left-color: #27AE60;">
+                    <div class="demand-info">
+                        <h4>Ana C. (Casal)</h4>
+                        <p>Duração: 4 Dias | Orçamento: <strong>R$ 3.000</strong></p>
+                        <div class="demand-tags">
+                            <span class="tag">Praia</span>
+                            <span class="tag">Conforto Intermediário</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="color: #27AE60; font-weight:bold; font-size:1.5rem; margin-bottom:10px;">98% Match</div>
+                        <button class="btn-primary" onclick="startChat('Ana C.')">Fazer Proposta</button>
+                    </div>
+                </div>
+
+                <div class="demand-card">
+                    <div class="demand-info">
+                        <h4>Marcelo T. (Família)</h4>
+                        <p>Duração: 7 Dias | Orçamento: <strong>R$ 6.500</strong></p>
+                        <div class="demand-tags">
+                            <span class="tag">Natureza</span>
+                            <span class="tag">Espaço Kids</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="color: var(--orange); font-weight:bold; font-size:1.5rem; margin-bottom:10px;">85% Match</div>
+                        <button class="btn-primary" onclick="startChat('Marcelo T.')">Fazer Proposta</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Gerador de Pacotes e Experiências -->
+            <section id="pacotes" class="view-section">
+                <h3>Gerador de Pacotes e Experiências Exclusivas 📦</h3>
+                <p class="text-light" style="margin-bottom: 20px;">Crie ofertas atrativas com facilidade usando nossos templates que convertem mais.</p>
+                
+                <div class="package-builder">
+                    <h4 style="color: var(--primary-blue); font-size: 1.5rem;">Crie uma Nova Oferta</h4>
+                    <p class="text-light mt-2 mb-4">Escolha um modelo inteligente ou crie do zero.</p>
+                    <div style="display:flex; justify-content:center; gap:20px;">
+                        <button class="btn-secondary" onclick="simulatePackageCreation()">🪄 Usar Template "Fim de Semana Romântico"</button>
+                        <button class="btn-primary" onclick="simulatePackageCreation()">+ Criar do Zero</button>
+                    </div>
+                </div>
+
+                <h4>Seus Pacotes Ativos</h4>
+                <div class="grid-2 mt-2">
+                    <div class="day-card" style="border-left-color: var(--primary-blue);">
+                        <h4>Especial Gastronomia</h4>
+                        <p class="text-light mt-2">Hospedagem 2 noites + Jantar Completo</p>
+                        <div style="display:flex; justify-content:space-between; margin-top:15px; align-items:center;">
+                            <span style="font-weight:bold;">R$ 1.200</span>
+                            <span class="tag">12 vendas</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Chat e Relacionamento -->
+            <section id="chat" class="view-section">
+                <h3>Relacionamento e Negociações 💬</h3>
+                <p class="text-light" style="margin-bottom: 20px;">Converse diretamente com o cliente e ajuste os pacotes para fechar negócio.</p>
+                
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <div>
+                            <h3 style="color: white; margin-bottom:5px;" id="chat-title">Nenhuma negociação selecionada</h3>
+                            <span style="font-size:0.8rem; opacity:0.8;">Selecione um cliente em Demandas</span>
+                        </div>
+                        <button class="btn-secondary" style="padding: 5px 15px;">Finalizar Acordo</button>
+                    </div>
+                    
+                    <div class="chat-messages" id="chat-history">
+                        <div style="text-align:center; color:var(--text-light); margin-top:50px;">
+                            Suas conversas ativas aparecerão aqui.
+                        </div>
+                    </div>
+
+                    <div class="chat-input">
+                        <input type="text" id="msg-input" placeholder="Envie sua proposta, tire dúvidas ou ofereça brindes...">
+                        <button class="btn-primary" onclick="sendMessage()">Enviar</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Nova Seção: Redes Sociais -->
+            <section id="redes-sociais" class="view-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div>
+                        <h3>Instagram da Empresa 📱</h3>
+                        <p class="text-light">Conecte sua rede social para aumentar sua credibilidade e visibilidade.</p>
+                    </div>
+                    <button class="btn-primary" onclick="triggerToast('Configurações Salvas', 'Seu perfil foi atualizado com sucesso!')">Salvar Alterações</button>
+                </div>
+
+                <div class="grid-2">
+                    <div class="social-input-group">
+                        <h4 style="margin-bottom: 20px; color: var(--primary-blue);">Configuração do Perfil</h4>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label>Link do Instagram</label>
+                            <input type="text" class="form-input" placeholder="https://www.instagram.com/suaempresa" id="insta-link">
+                        </div>
+
+                        <div>
+                            <label>@ da Empresa</label>
+                            <div class="insta-handle-wrapper">
+                                <span>@</span>
+                                <input type="text" placeholder="suaempresa" id="insta-handle" oninput="updateInstaPreview()">
+                            </div>
+                        </div>
+
+                        <p class="text-light mt-4" style="font-size: 0.9rem;">💡 Perfis com Instagram conectado têm <strong>45% mais chances</strong> de fechar negociações diretas.</p>
+                    </div>
+
+                    <div class="data-card">
+                        <h4 style="margin-bottom: 20px; color: var(--primary-blue); text-align: center;">Prévia no Perfil Plango</h4>
+                        
+                        <div class="instagram-preview-card">
+                            <div class="instagram-header">
+                                <div class="insta-avatar">
+                                    <div class="insta-avatar-inner"></div>
+                                </div>
+                                <div class="insta-info">
+                                    <h5 id="preview-handle">suaempresa</h5>
+                                    <span>Instagram Oficial</span>
+                                </div>
+                            </div>
+                            <div class="instagram-grid">
+                                <div class="insta-post"></div>
+                                <div class="insta-post"></div>
+                                <div class="insta-post"></div>
+                                <div class="insta-post"></div>
+                                <div class="insta-post"></div>
+                                <div class="insta-post"></div>
+                            </div>
+                            <div class="instagram-footer">
+                                <button class="btn-instagram">Ver no Instagram</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Campanhas e Automação -->
+            <section id="campanhas" class="view-section">
+                <h3>Campanhas e Automação 🚀</h3>
+                <p class="text-light" style="margin-bottom: 20px;">Programe disparos direcionados para perfis específicos sem ser invasivo.</p>
+                
+                <div class="data-card">
+                    <h4>Criar Disparo Direcionado</h4>
+                    <p class="text-light mt-2 mb-3">O sistema Plango entregará sua oferta na "Caixa de Propostas" de usuários que dão Match com os critérios abaixo.</p>
+                    
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
+                        <div>
+                            <label style="display:block; font-size:0.9rem; font-weight:bold; margin-bottom:5px;">Público Alvo</label>
+                            <select style="width:100%; padding:10px; border:1px solid #CBD5E1; border-radius:var(--radius); font-family:'Outfit';">
+                                <option>Usuários buscando "Praia"</option>
+                                <option>Famílias</option>
+                                <option>Orçamento > R$ 5.000</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:0.9rem; font-weight:bold; margin-bottom:5px;">Pacote a Oferecer</label>
+                            <select style="width:100%; padding:10px; border:1px solid #CBD5E1; border-radius:var(--radius); font-family:'Outfit';">
+                                <option>Especial Gastronomia (R$ 1.200)</option>
+                                <option>Desconto Simples (10% OFF)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="triggerAutomationToast()">Lançar Campanha de Automação</button>
+                </div>
+            </section>
+
+            <!-- 7. Reputação e Evolução -->
+            <section id="reputacao" class="view-section">
+                <h3>Sua Reputação na Plango ⭐</h3>
+                <p class="text-light" style="margin-bottom: 20px;">Baseado não só em avaliações, mas na qualidade das interações e velocidade de resposta.</p>
+                
+                <div class="data-card" style="display:flex; align-items:center; gap:40px;">
+                    <div class="reputation-score">
+                        <div class="reputation-circle">
+                            <span>8.5</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color:var(--primary-blue); font-size:1.5rem;">Selo Prata 🥈</h4>
+                        <p class="text-light mt-2">Sua visibilidade está alta (Top 15% da região). Continue respondendo rapidamente para alcançar o Selo Ouro!</p>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="day-card">
+                        <h4>Métricas de Qualidade</h4>
+                        <ul style="list-style:none; margin-top:15px; line-height:1.8;">
+                            <li>✅ Tempo de Resposta: <strong>Menos de 2h</strong></li>
+                            <li>✅ Taxa de Aceitação: <strong>32%</strong></li>
+                            <li>⚠️ Feedbacks Positivos: <strong>89%</strong> (Meta: 95%)</li>
+                        </ul>
+                    </div>
+                    <div class="day-card" style="border-left-color: var(--yellow);">
+                        <h4>Dicas para Evoluir</h4>
+                        <p class="text-light mt-2">Analise os feedbacks detalhados deixados pelos clientes no final do roteiro para entender como melhorar os serviços extras.</p>
+                        <button class="btn-secondary mt-3 w-100">Ler Feedbacks Ocultos</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="painel-empresa.js"></script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurando sua Empresa - Plango</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: var(--bg-blue); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        
+        .onboarding-container {
+            background: var(--white);
+            max-width: 800px;
+            width: 100%;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-progress { background: #F8FAFC; padding: 20px 30px; border-bottom: 1px solid #E2E8F0; }
+        .header-progress h2 { font-size: 1.5rem; margin-bottom: 15px; color: var(--primary-blue); }
+        .progress-bar { width: 100%; height: 6px; background-color: #E2E8F0; border-radius: 3px; overflow: hidden; }
+        .progress-fill { height: 100%; background-color: var(--orange); width: 25%; transition: width 0.4s ease; }
+
+        .step-content { padding: 40px 30px; display: none; animation: fadeIn 0.4s; }
+        .step-content.active { display: block; }
+        
+        .step-title { font-family: 'Bodoni Moda', serif; font-size: 2rem; color: var(--primary-blue); margin-bottom: 10px; }
+        .step-desc { color: var(--text-light); margin-bottom: 30px; font-size: 1.1rem; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-weight: 600; margin-bottom: 8px; color: var(--text-dark); }
+        .form-input, .form-select, textarea {
+            padding: 12px 15px; border: 1px solid #CBD5E1; border-radius: var(--radius);
+            font-family: 'Outfit', sans-serif; font-size: 1rem; outline: none; width: 100%;
+        }
+        .form-input:focus, .form-select:focus, textarea:focus { border-color: var(--primary-blue); }
+
+        .upload-box {
+            border: 2px dashed #CBD5E1; border-radius: var(--radius); padding: 30px;
+            text-align: center; color: var(--text-light); cursor: pointer; transition: 0.3s;
+        }
+        .upload-box:hover { border-color: var(--primary-blue); background: var(--bg-blue); }
+
+        .chips-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        .chip {
+            padding: 10px 20px; border: 1px solid #CBD5E1; border-radius: 30px;
+            cursor: pointer; font-weight: 600; color: var(--text-light); transition: 0.2s; user-select: none;
+        }
+        .chip.selected { background-color: var(--primary-blue); color: white; border-color: var(--primary-blue); }
+
+        .actions { display: flex; justify-content: space-between; padding: 20px 30px; background: #F8FAFC; border-top: 1px solid #E2E8F0; }
+    </style>
+</head>
+<body>
+
+    <div class="onboarding-container">
+        <div class="header-progress">
+            <h2>Preparando seu Negócio</h2>
+            <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        </div>
+
+        <!-- Passo 1: Verificação de Dados -->
+        <div class="step-content active" id="step-1">
+            <h3 class="step-title">Verificação de Segurança</h3>
+            <p class="step-desc">A Plango garante uma plataforma segura. Precisamos validar os dados básicos da sua empresa antes de você negociar.</p>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Razão Social / Nome Fantasia</label>
+                    <input type="text" class="form-input" placeholder="Ex: Pousada do Sol LTDA">
+                </div>
+                <div class="form-group">
+                    <label>CNPJ</label>
+                    <input type="text" class="form-input" placeholder="00.000.000/0000-00">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Envio de Documentos (Alvará/Comprovante)</label>
+                <div class="upload-box">
+                    📁 Clique ou arraste seus documentos PDF/JPG aqui.
+                </div>
+            </div>
+        </div>
+
+        <!-- Passo 2: Construção do Perfil -->
+        <div class="step-content" id="step-2">
+            <h3 class="step-title">Identidade Visual e Preços</h3>
+            <p class="step-desc">Seja atrativo. Suba fotos reais e descreva seus maiores diferenciais para se destacar no sistema.</p>
+            
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Fotos Reais do Local</label>
+                <div class="upload-box">
+                    📸 Adicione fotos das fachadas, quartos e áreas comuns.
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Diferenciais (Ex: Piscina, Beira-mar)</label>
+                    <textarea rows="3" placeholder="O que faz sua hospedagem ser única?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Tipos de Acomodação e Base de Preços</label>
+                    <textarea rows="3" placeholder="Ex: Quarto Standard - R$200/diária, Suíte Master - R$450/diária"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Passo 3: Preferências e Atuação -->
+        <div class="step-content" id="step-3">
+            <h3 class="step-title">Público-Alvo e Atuação</h3>
+            <p class="step-desc">Que tipo de cliente sua hospedagem atende melhor? Isso guiará nossos filtros automáticos.</p>
+            
+            <div class="form-group">
+                <label>Perfis que você busca (Múltiplos)</label>
+                <div class="chips-container" onclick="toggleChip(event)">
+                    <div class="chip selected">Econômicos</div>
+                    <div class="chip selected">Casais</div>
+                    <div class="chip">Famílias</div>
+                    <div class="chip">Viajantes Solo</div>
+                    <div class="chip">Aventuras / Trilhas</div>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Período de Maior Interesse (Baixa temporada, Alta)</label>
+                    <select class="form-select">
+                        <option>Foco no Ano Todo</option>
+                        <option>Baixa Temporada (Preencher vagas)</option>
+                        <option>Alta Temporada e Feriados</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Flexibilidade de Negociação no Chat</label>
+                    <select class="form-select">
+                        <option>Flexível (Posso dar bons descontos)</option>
+                        <option>Moderada (Pequenos ajustes)</option>
+                        <option>Rígida (Preços tabelados fixos)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Passo 4: Formatação de Proposta Inteligente -->
+        <div class="step-content" id="step-4">
+            <h3 class="step-title">Preparação de Propostas</h3>
+            <p class="step-desc">O sistema vai sugerir os formatos ideais para cada cliente. Deixe templates prontos para ganhar tempo!</p>
+            
+            <div style="background: #F8FAFC; padding: 20px; border-radius: var(--radius); border: 1px solid #E2E8F0; margin-bottom: 20px;">
+                <h4 style="color: var(--primary-blue); margin-bottom: 10px;">Exemplo de Template Base:</h4>
+                <textarea rows="4" style="width:100%; border:1px solid #CBD5E1; border-radius:8px; padding:10px; font-family:'Outfit';">"Olá, vi que está planejando uma viagem em casal! Tenho uma Suíte Master com vista, café da manhã incluso e posso conceder 10% de desconto pelo aplicativo. Que tal?"</textarea>
+                <p style="font-size:0.85rem; color:var(--text-light); margin-top:10px;">Você poderá ajustar esse texto e valores no chat com o cliente real, aumentando suas chances de aceitação.</p>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn-secondary" id="btn-prev" onclick="prevStep()" style="visibility: hidden;">Voltar</button>
+            <button class="btn-primary" id="btn-next" onclick="nextStep()">Avançar para Construção</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        function updateUI() {
+            document.getElementById('progress-fill').style.width = `${(currentStep / totalSteps) * 100}%`;
+
+            document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+
+            document.getElementById('btn-prev').style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+            
+            const btnNext = document.getElementById('btn-next');
+            if (currentStep === totalSteps) {
+                btnNext.innerText = 'Finalizar e Abrir Painel de Demandas 🎯';
+                btnNext.classList.add('btn-orange');
+                btnNext.onclick = function() {
+                    window.location.href = 'painel-empresa.html';
+                };
+            } else {
+                btnNext.innerText = 'Avançar';
+                btnNext.classList.remove('btn-orange');
+                btnNext.onclick = nextStep;
+            }
+        }
+
+        function nextStep() { if (currentStep < totalSteps) { currentStep++; updateUI(); } }
+        function prevStep() { if (currentStep > 1) { currentStep--; updateUI(); } }
+
+        function toggleChip(e) {
+            if(e.target.classList.contains('chip')) {
+                e.target.classList.toggle('selected');
+            }
+        }
+    </script>
+</body>
+</html>

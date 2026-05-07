@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Viajante - Plango</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #F1F5F9; }
+        /* Layout do Dashboard */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: var(--white);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-logo {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            flex: 1;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: var(--bg-blue);
+            color: var(--primary-blue);
+        }
+
+        .sidebar-menu .icon { margin-right: 15px; font-size: 1.2rem; }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px;
+        }
+
+        /* Header do Painel */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .budget-card {
+            background: var(--primary-blue);
+            color: white;
+            padding: 15px 30px;
+            border-radius: var(--radius);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(10, 77, 128, 0.2);
+        }
+
+        .budget-card span { font-size: 0.9rem; opacity: 0.8; }
+        .budget-card h2 { color: var(--yellow); margin: 0; font-family: 'Outfit'; font-size: 2rem; }
+
+        /* Sections */
+        .view-section { display: none; animation: fadeIn 0.4s; }
+        .view-section.active { display: block; }
+
+        .day-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--orange);
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #E2E8F0;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .trip-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #F8FAFC;
+            border-radius: var(--radius);
+            border: 1px solid #E2E8F0;
+        }
+
+        .item-info { flex: 1; }
+        .item-info h4 { color: var(--primary-blue); margin-bottom: 5px; }
+        .item-info p { font-size: 0.9rem; color: var(--text-light); }
+
+        .item-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .price-tag { font-weight: 600; color: var(--text-dark); }
+        
+        .select-hotel {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #CBD5E1;
+            font-family: 'Outfit';
+        }
+
+        .btn-logout { margin-top: 30px; color: #E53E3E; text-decoration: none; font-weight: 600; text-align: center; display: block; padding: 10px; }
+
+        /* Estilos Financeiros Específicos */
+        .finance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .finance-input-group {
+            margin-bottom: 15px;
+        }
+        .finance-input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .finance-input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #CBD5E1;
+            border-radius: var(--radius);
+            font-family: 'Outfit';
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg width="120" height="35" viewBox="0 0 160 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 38C10 38 18 32 25 32C32 32 38 38 38 38H10Z" fill="var(--primary-blue)"/>
+                    <path d="M7 40C7 40 16 38 24 38C32 38 41 40 41 40V42H7V40Z" fill="var(--primary-blue)"/>
+                    <path d="M20 32C20 32 18 20 12 18" stroke="var(--primary-blue)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M14 19C14 19 18 16 20 12" stroke="var(--primary-blue)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M14 19C14 19 12 15 8 16" stroke="var(--primary-blue)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M14 19C14 19 10 22 8 26" stroke="var(--primary-blue)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M28 33C28 33 32 24 39 23" stroke="var(--primary-blue)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M37 24C37 24 35 20 31 18" stroke="var(--primary-blue)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M37 24C37 24 40 21 44 23" stroke="var(--primary-blue)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M37 24C37 24 41 28 42 32" stroke="var(--primary-blue)" stroke-width="2" stroke-linecap="round"/>
+                    <text x="50" y="35" font-family="'Playfair Display', serif" font-size="28" font-weight="700" fill="var(--primary-blue)" letter-spacing="1">PLANGO</text>
+                </svg>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" onclick="switchView('visao-geral', this)"><span class="icon">🏠</span> Visão Geral</a></li>
+                <li><a href="#" onclick="switchView('perfil', this)"><span class="icon">🧠</span> Meu Perfil (Quiz)</a></li>
+                <li><a href="#" onclick="switchView('roteiro', this)"><span class="icon">📅</span> Roteiro Central</a></li>
+                <li><a href="#" onclick="switchView('experiencias', this)"><span class="icon">🥂</span> Experiências (Flavor)</a></li>
+                <li><a href="#" onclick="switchView('simulador', this)"><span class="icon">🕹️</span> Simulador de Rota</a></li>
+                <li><a href="#" onclick="switchView('financeiro', this)"><span class="icon">💰</span> Plano Financeiro</a></li>
+                <li><a href="#" onclick="switchView('propostas', this)"><span class="icon">📥</span> Propostas Externas</a></li>
+            </ul>
+            <a href="index.html" class="btn-logout">Sair</a>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <header class="dashboard-header">
+                <div>
+                    <h2>Olá, Viajante!</h2>
+                    <p class="text-light">Seu ecossistema completo de planejamento e descoberta.</p>
+                </div>
+                <div class="budget-card">
+                    <span>Custo Estimado da Viagem Ativa</span>
+                    <h2 id="total-budget">R$ 0,00</h2>
+                </div>
+            </header>
+
+            <!-- 1. Visão Geral -->
+            <section id="visao-geral" class="view-section active">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Resumo das suas atividades</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-secondary" onclick="autoGenerateTrip()">⚡ Viagem Automática</button>
+                        <button class="btn-primary" style="background-color: var(--yellow); color: var(--text-dark);" onclick="surpriseTrip()">🎁 Viagem Surpresa</button>
+                    </div>
+                </div>
+
+                <div class="grid-3" style="margin-bottom: 40px;">
+                    <div class="day-card" style="border-left-color: var(--primary-blue);">
+                        <h4>Viagem Atual</h4>
+                        <p class="text-light mt-2"><strong>Destino:</strong> Litoral Norte</p>
+                        <p class="text-light"><strong>Data:</strong> 05 a 07 de Maio</p>
+                        <button class="btn-primary mt-2 w-100" onclick="document.querySelectorAll('.sidebar-menu a')[2].click()">Abrir Roteiro</button>
+                    </div>
+                    <div class="day-card" style="border-left-color: #27AE60;">
+                        <h4>Inteligência Plango</h4>
+                        <p class="text-light mt-2" style="font-size:0.9rem;">Seu modo de viagem atual está configurado para <strong>Econômico e Gastronômico</strong>. Suas sugestões estão sendo moldadas por isso.</p>
+                        <button class="btn-secondary mt-2 w-100" onclick="document.querySelectorAll('.sidebar-menu a')[1].click()">Ajustar Cérebro</button>
+                    </div>
+                    <div class="day-card" style="border-left-color: var(--orange);">
+                        <h4>Meta Financeira</h4>
+                        <p class="text-light mt-2">Você precisa de <strong>4 meses</strong> para custear sua próxima viagem com a sua renda informada.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Meu Perfil (Quiz Permanente - O Cérebro) -->
+            <section id="perfil" class="view-section">
+                <h3>O Cérebro do Planejamento 🧠</h3>
+                <p class="text-light" style="margin-bottom: 20px;">Atualize suas preferências a qualquer momento. Todas as sugestões do roteiro se ajustam automaticamente.</p>
+
+                <div class="quiz-container">
+                    <div class="progress-bar"><div class="progress-fill" id="quiz-progress" style="width:25%"></div></div>
+
+                    <!-- Etapa 1: Orçamento -->
+                    <div class="quiz-step active" id="quiz-step-1">
+                        <h3>Qual é o seu orçamento total para a viagem?</h3>
+                        <div class="input-group">
+                            <span class="currency">R$</span>
+                            <input type="number" id="quiz-orcamento" placeholder="Ex: 3000" value="3000">
+                        </div>
+                        <div class="select-group">
+                            <select id="quiz-duracao">
+                                <option>Fim de semana (2-3 dias)</option>
+                                <option selected>Curta temporada (4-6 dias)</option>
+                                <option>Longa (7+ dias)</option>
+                            </select>
+                        </div>
+                        <div class="quiz-actions"><span></span><button class="btn-primary" onclick="nextQuizStep(2)">Próximo →</button></div>
+                    </div>
+
+                    <!-- Etapa 2: Estilo -->
+                    <div class="quiz-step" id="quiz-step-2">
+                        <h3>Qual é o seu estilo de viagem?</h3>
+                        <div class="options-grid">
+                            <label class="quiz-option"><input type="checkbox" value="praia" checked> 🏖️ Praia & Mar</label>
+                            <label class="quiz-option"><input type="checkbox" value="aventura"> 🧗 Aventura</label>
+                            <label class="quiz-option"><input type="checkbox" value="cultura"> 🏛️ Cultura & Arte</label>
+                            <label class="quiz-option"><input type="checkbox" value="gastronomia" checked> 🍽️ Gastronomia</label>
+                            <label class="quiz-option"><input type="checkbox" value="noturno"> 🎉 Vida Noturna</label>
+                            <label class="quiz-option"><input type="checkbox" value="natureza"> 🌿 Natureza</label>
+                        </div>
+                        <div class="quiz-actions"><button class="btn-secondary" onclick="nextQuizStep(1)">← Voltar</button><button class="btn-primary" onclick="nextQuizStep(3)">Próximo →</button></div>
+                    </div>
+
+                    <!-- Etapa 3: Hospedagem -->
+                    <div class="quiz-step" id="quiz-step-3">
+                        <h3>Que tipo de hospedagem você prefere?</h3>
+                        <div class="options-grid">
+                            <label class="quiz-option"><input type="radio" name="hospedagem" value="hostel"> 🛏️ Hostel / Econômico</label>
+                            <label class="quiz-option"><input type="radio" name="hospedagem" value="pousada" checked> 🏡 Pousada Charmosa</label>
+                            <label class="quiz-option"><input type="radio" name="hospedagem" value="hotel"> 🏨 Hotel Confortável</label>
+                            <label class="quiz-option"><input type="radio" name="hospedagem" value="resort"> 🌴 Resort / Luxo</label>
+                        </div>
+                        <div class="select-group">
+                            <select id="quiz-ritmo">
+                                <option>Agitado — quero fazer tudo</option>
+                                <option selected>Moderado — equilíbrio</option>
+                                <option>Tranquilo — foco em relaxar</option>
+                            </select>
+                        </div>
+                        <div class="quiz-actions"><button class="btn-secondary" onclick="nextQuizStep(2)">← Voltar</button><button class="btn-primary" onclick="nextQuizStep(4)">Próximo →</button></div>
+                    </div>
+
+                    <!-- Etapa 4: Gastronomia -->
+                    <div class="quiz-step" id="quiz-step-4">
+                        <h3>O que você mais curte em gastronomia?</h3>
+                        <div class="options-grid">
+                            <label class="quiz-option"><input type="checkbox" value="frutos-mar" checked> 🦞 Frutos do Mar</label>
+                            <label class="quiz-option"><input type="checkbox" value="churrasco"> 🥩 Churrasco & Carnes</label>
+                            <label class="quiz-option"><input type="checkbox" value="vegano"> 🥗 Vegano / Natural</label>
+                            <label class="quiz-option"><input type="checkbox" value="bar"> 🍺 Bares & Petiscos</label>
+                            <label class="quiz-option"><input type="checkbox" value="fine-dining" checked> 🍷 Fine Dining</label>
+                            <label class="quiz-option"><input type="checkbox" value="feiras"> 🌽 Feiras Culturais</label>
+                        </div>
+                        <div class="quiz-actions"><button class="btn-secondary" onclick="nextQuizStep(3)">← Voltar</button><button class="btn-primary" onclick="saveQuiz()">Salvar Perfil ✓</button></div>
+                    </div>
+
+                    <!-- Confirmação -->
+                    <div class="quiz-step" id="quiz-step-done">
+                        <div class="success-animation">🧠✅</div>
+                        <h3 style="text-align:center;">Perfil Atualizado!</h3>
+                        <p style="text-align:center; color:var(--text-light); margin-bottom:20px;">Todas as sugestões de roteiro, gastronomia e hospedagem foram recalibradas com base nas suas preferências.</p>
+                        <button class="btn-primary w-100" onclick="nextQuizStep(1); document.getElementById('quiz-progress').style.width='25%'">Editar Novamente</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Roteiro Central -->
+            <section id="roteiro" class="view-section">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                    <div>
+                        <h3>Roteiro: Litoral Norte 🏖️</h3>
+                        <p class="text-light">Gerado com base no seu perfil: <strong>Praia, Gastronomia, Fim de Semana</strong></p>
+                    </div>
+                    <span class="tag" style="background:#27AE60;color:white;padding:8px 15px;">3 dias &middot; R$ 1.850 estimado</span>
+                </div>
+                <div class="sub-tabs">
+                    <div class="sub-tab active" onclick="switchSubView('roteiro-cronograma', this)">📅 Cronograma</div>
+                    <div class="sub-tab" onclick="switchSubView('roteiro-mapa', this)">🗺️ Rota no Mapa</div>
+                    <div class="sub-tab" onclick="switchSubView('roteiro-docs', this)">📁 Documentos</div>
+                </div>
+
+                <div id="roteiro-cronograma" class="sub-view active">
+                    <!-- DIA 1 -->
+                    <div class="day-card">
+                        <div class="day-header"><h3>Dia 1 &mdash; Chegada &amp; Primeira Praia</h3><span class="text-orange" style="font-weight:bold;">Sexta-feira</span></div>
+                        <div class="item-list">
+                            <div class="trip-item">
+                                <div class="item-info"><h4>✈️ Vôo + Transfer</h4><p>Saída 07h30 · Chegada 09h00 · Transfer incluído.</p></div>
+                                <div class="item-controls">
+                                    <select class="select-hotel" id="hotel-selector" onchange="recalculateBudget()">
+                                        <option value="150">Hostel Econômico (+R$150/dia)</option>
+                                        <option value="350" selected>Pousada Charmosa (+R$350/dia)</option>
+                                        <option value="900">Resort 5 Estrelas (+R$900/dia)</option>
+                                    </select>
+                                    <span class="price-tag" id="hotel-price">R$ 350</span>
+                                </div>
+                            </div>
+                            <div class="trip-item" style="border-left:4px solid #2392D0;">
+                                <div class="item-info"><h4>🏖️ Praia do Forte (10h–14h)</h4><p>Tranquila e paradisíaca — recomendada para o seu perfil de relaxamento.</p></div>
+                                <div class="item-controls"><span class="price-tag" style="color:#27AE60;">Grátis</span></div>
+                            </div>
+                            <div class="trip-item" style="border-left:4px solid var(--orange);">
+                                <div class="item-info"><h4>🍽️ Almoço: Bistrô do Litoral (14h) &mdash; via Flavor Route</h4><p>Frutos do Mar · 5 estrelas · Selecionado pelo seu perfil gastronômico.</p></div>
+                                <div class="item-controls">
+                                    <span class="price-tag">~R$ 90/pessoa</span>
+                                    <a href="https://eduardarodriguesz.github.io/FlavorRoute/" target="_blank" class="btn-primary" style="font-size:0.8rem;padding:8px 12px;text-decoration:none;">Ver no Flavor Route 🔗</a>
+                                </div>
+                            </div>
+                            <div class="trip-item" style="border-left:4px solid var(--yellow);">
+                                <div class="item-info"><h4>🎉 Festa na Areia (22h)</h4><p>Evento sazonal · DJ local · Recomendado para o seu perfil "Vida Noturna".</p></div>
+                                <div class="item-controls"><span class="price-tag">R$ 30 couvert</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- DIA 2 -->
+                    <div class="day-card">
+                        <div class="day-header"><h3>Dia 2 &mdash; Cultura, Feira &amp; Pôr do Sol</h3><span class="text-orange" style="font-weight:bold;">Sábado</span></div>
+                        <div class="item-list">
+                            <div class="trip-item" style="border-left:4px solid #27AE60;">
+                                <div class="item-info"><h4>🌽 Feira Gastronômica Local (09h–12h)</h4><p>Produtores locais, artesanato e culinária regional · entrada gratuita.</p></div>
+                                <div class="item-controls"><span class="price-tag" style="color:#27AE60;">Grátis</span></div>
+                            </div>
+                            <div class="trip-item" style="border-left:4px solid #2392D0;">
+                                <div class="item-info"><h4>🏄 Aula de Surf / Stand-up Paddle (13h)</h4><p>Para o seu perfil aventureiro · guia certificado incluso.</p></div>
+                                <div class="item-controls"><span class="price-tag">R$ 80</span><label><input type="checkbox" checked onchange="recalculateBudget()"> Incluir</label></div>
+                            </div>
+                            <div class="trip-item" style="border-left:4px solid var(--orange);">
+                                <div class="item-info"><h4>🍷 Jantar Fine Dining: Restaurante Oásis (20h)</h4><p>Menu degustação 7 passos · Recomendado pelo Flavor Route.</p></div>
+                                <div class="item-controls">
+                                    <span class="price-tag">~R$ 200/pessoa</span>
+                                    <a href="https://eduardarodriguesz.github.io/FlavorRoute/" target="_blank" class="btn-primary" style="font-size:0.8rem;padding:8px 12px;text-decoration:none;">Reservar via Flavor Route 🔗</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- DIA 3 -->
+                    <div class="day-card">
+                        <div class="day-header"><h3>Dia 3 &mdash; Manhã Livre &amp; Retorno</h3><span class="text-orange" style="font-weight:bold;">Domingo</span></div>
+                        <div class="item-list">
+                            <div class="trip-item" style="border-left:4px solid #2392D0;">
+                                <div class="item-info"><h4>🐠 Mergulho Ecológico (08h)</h4><p>Passeio de barco até recife de corais · equipamentos incluídos.</p></div>
+                                <div class="item-controls"><span class="price-tag">R$ 120</span><label><input type="checkbox" onchange="recalculateBudget()"> Incluir</label></div>
+                            </div>
+                            <div class="trip-item">
+                                <div class="item-info"><h4>✈️ Voo de Retorno (16h)</h4><p>Check-out 12h · Transfer para o aeroporto às 13h30.</p></div>
+                                <div class="item-controls"><span class="price-tag">Incluído</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="roteiro-mapa" class="sub-view">
+                    <div style="background:url('hero_bg.png') center/cover;height:300px;border-radius:var(--radius);position:relative;overflow:hidden;box-shadow:var(--shadow);">
+                        <div style="position:absolute;inset:0;background:rgba(10,77,128,0.55);display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;text-align:center;padding:20px;">
+                            <h2 style="font-size:2rem;margin-bottom:10px;">📍 Rota do Roteiro</h2>
+                            <p style="max-width:520px;">Hotel → Praia do Forte → Bistrô do Litoral → Feira Gastronômica → Oásis Fine Dining → Aeroporto</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="roteiro-docs" class="sub-view">
+                    <div class="day-card">
+                        <h4 style="margin-bottom:15px;">Documentos e Confirmações</h4>
+                        <p class="text-light mb-3">Centralize passagens, vouchers e reservas aqui.</p>
+                        <button class="btn-secondary">📁 Fazer Upload</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Experiências (Flavor Route) -->
+            <section id="experiencias" class="view-section">
+                <h3>Gastronomia e Experiências 🥂</h3>
+                <p class="text-light" style="margin-bottom:20px;">Seleção curada com base no seu perfil. Todas as opções são do <strong>Flavor Route</strong>, a plataforma de gastronomia de elite parceira da Plango.</p>
+
+                <div style="background:linear-gradient(135deg,var(--primary-blue),#2392D0);border-radius:var(--radius);padding:20px 25px;margin-bottom:25px;display:flex;justify-content:space-between;align-items:center;">
+                    <div style="color:white;">
+                        <h4 style="color:white;font-size:1.3rem;">Explorar o catálogo completo</h4>
+                        <p style="opacity:0.85;margin-top:5px;">Acesse todos os restaurantes, bares e experiências locais selecionados pelos especialistas do Flavor Route.</p>
+                    </div>
+                    <a href="https://eduardarodriguesz.github.io/FlavorRoute/" target="_blank" class="btn-primary" style="white-space:nowrap;background:var(--yellow);color:var(--text-dark);text-decoration:none;padding:12px 24px;border-radius:var(--radius);font-weight:600;">🔗 Abrir Flavor Route</a>
+                </div>
+
+                <div class="grid-3">
+                    <div class="inspiration-card">
+                        <div class="inspiration-img" style="background-color:#2392D0;">
+                            <span class="inspiration-tag" style="background:var(--primary-blue);">Recomendado para você</span>
+                        </div>
+                        <div class="inspiration-content">
+                            <h4>Bistrô do Litoral</h4>
+                            <p>5 estrelas Flavor Route · Frutos do Mar · Perfeito para o seu perfil.</p>
+                            <a href="https://eduardarodriguesz.github.io/FlavorRoute/" target="_blank" class="btn-primary mt-2 w-100" style="display:block;text-align:center;text-decoration:none;">🔗 Ver & Reservar no Flavor Route</a>
+                        </div>
+                    </div>
+                    <div class="inspiration-card">
+                        <div class="inspiration-img" style="background-color:#F6AE2D;">
+                            <span class="inspiration-tag">Fine Dining</span>
+                        </div>
+                        <div class="inspiration-content">
+                            <h4>Restaurante Oásis</h4>
+                            <p>Menu degustação 7 passos · Experiência única · Reserva antecipada.</p>
+                            <a href="https://eduardarodriguesz.github.io/FlavorRoute/" target="_blank" class="btn-primary mt-2 w-100" style="display:block;text-align:center;text-decoration:none;">🔗 Ver & Reservar no Flavor Route</a>
+                        </div>
+                    </div>
+                    <div class="inspiration-card">
+                        <div class="inspiration-img" style="background-color:#0A4D80;">
+                            <span class="inspiration-tag" style="background:#27AE60;">Vida Noturna</span>
+                        </div>
+                        <div class="inspiration-content">
+                            <h4>Bar da Lua</h4>
+                            <p>Cocktails artesanais · Vista para o mar · Vibe descontraída.</p>
+                            <a href="https://eduardarodriguesz.github.io/FlavorRoute/" target="_blank" class="btn-primary mt-2 w-100" style="display:block;text-align:center;text-decoration:none;">🔗 Ver & Reservar no Flavor Route</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Simulador de Cenários -->
+            <section id="simulador" class="view-section">
+                <h3>Simulador de Cenários 🕹️</h3>
+                <p class="text-light" style="margin-bottom: 20px;">Ajuste parâmetros para ver o impacto financeiro em tempo real no seu plano.</p>
+                
+                <div class="simulator-controls">
+                    <div class="control-group">
+                        <label>Duração</label>
+                        <select id="sim-dias" onchange="runSimulation()">
+                            <option value="3">Fim de Semana (3 dias)</option>
+                            <option value="5" selected>Curta (5 dias)</option>
+                            <option value="7">Uma Semana (7 dias)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Hospedagem</label>
+                        <select id="sim-hotel" onchange="runSimulation()">
+                            <option value="hostel">Hostel</option>
+                            <option value="pousada" selected>Pousada</option>
+                            <option value="resort">Resort / Luxo</option>
+                        </select>
+                    </div>
+                    <div class="control-group" style="flex: 0;">
+                        <button class="btn-primary" onclick="runSimulation()">Simular</button>
+                    </div>
+                </div>
+
+                <div class="grid-2" id="sim-results">
+                    <!-- Resultados JS -->
+                </div>
+            </section>
+
+            <!-- 6. Plano Financeiro Avançado -->
+            <section id="financeiro" class="view-section">
+                <h3>Assistente Financeiro e Metas 💰</h3>
+                <p class="text-light" style="margin-bottom: 20px;">Transformamos a sua renda em um plano realista e alcançável.</p>
+                
+                <div class="finance-grid">
+                    <div class="day-card">
+                        <h4 style="margin-bottom: 15px;">Sua Realidade</h4>
+                        <div class="finance-input-group">
+                            <label>Renda Mensal (R$)</label>
+                            <input type="number" id="renda-mensal" value="5000" onkeyup="calculateFinance()">
+                        </div>
+                        <div class="finance-input-group">
+                            <label>Quanto deseja economizar por mês? (%)</label>
+                            <input type="number" id="porcentagem-economia" value="10" onkeyup="calculateFinance()">
+                        </div>
+                        <p class="text-light" style="font-size: 0.9rem;">Custo total do Roteiro Atual: <strong id="custo-roteiro-calc" style="color:var(--text-dark)">R$ 1.500</strong></p>
+                    </div>
+
+                    <div class="day-card" style="border-left-color: #27AE60; display:flex; flex-direction:column; justify-content:center;">
+                        <h4 style="text-align:center; color:#27AE60;">Tempo Estimado</h4>
+                        <h2 style="text-align:center; font-size:3rem; margin:10px 0;" id="meses-meta">3 Meses</h2>
+                        <p style="text-align:center; color:var(--text-light);">Economizando R$ <span id="valor-economizado">500</span> por mês, você atingirá a meta para esta viagem com folga.</p>
+                        
+                        <div class="goal-progress mt-4">
+                            <div class="goal-fill" style="width: 100%; background:#27AE60;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="day-card mt-4">
+                    <h4>Distribuição dos Custos</h4>
+                    <div class="bar-chart mt-4">
+                        <div class="bar-row">
+                            <div class="bar-label"><span>Hospedagem</span> <span>50%</span></div>
+                            <div class="bar-bg"><div class="bar-fill blue" style="width: 50%;"></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label"><span>Voos e Transporte</span> <span>30%</span></div>
+                            <div class="bar-bg"><div class="bar-fill orange" style="width: 30%;"></div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label"><span>Lazer e Experiências (Flavor)</span> <span>20%</span></div>
+                            <div class="bar-bg"><div class="bar-fill" style="width: 20%; background:#27AE60;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. Caixa de Propostas -->
+            <section id="propostas" class="view-section">
+                <h3>Propostas de Parceiros 📥</h3>
+                <p class="text-light" style="margin-bottom: 20px;">Empresas da região viram seu perfil de forma anônima e prepararam ofertas sob medida.</p>
+                
+                <div class="day-card" style="border-left-color: var(--primary-blue);">
+                    <div class="day-header">
+                        <div>
+                            <h4 style="color: var(--primary-blue);">Tour Exclusivo - Agência Local</h4>
+                            <p class="text-light" style="font-size:0.9rem;">Eles notaram sua tag "Aventura & Trilhas".</p>
+                        </div>
+                        <span class="tag" style="background:#E2E8F0; padding:5px 10px; border-radius:10px;">Novo</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <p style="text-decoration: line-through; color:var(--text-light);">Normal: R$ 300</p>
+                            <p style="font-size: 1.5rem; color:var(--orange); font-weight:bold;">Sua oferta: R$ 180</p>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn-secondary" onclick="showToast('Iniciando Conversa', 'Abrindo chat com a agência...')">💬 Negociar</button>
+                            <button class="btn-primary" onclick="showToast('Oferta Aceita', 'Adicionado ao seu plano financeiro!')">Aceitar Oferta</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Pix Modal (Flavor Route) -->
+    <div id="pixModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; align-items:center; justify-content:center;">
+        <div style="background:var(--white); padding:30px; border-radius:var(--radius); text-align:center; max-width:400px; width:90%;">
+            <h3 id="pix-title" style="margin-bottom:10px;">Garantir Reserva</h3>
+            <p class="text-light" style="margin-bottom:20px;">Pague o sinal via Pix para garantir sua mesa no modelo Flavor Route.</p>
+            <div style="width:200px; height:200px; background:#E2E8F0; margin:0 auto 20px; display:flex; align-items:center; justify-content:center;">
+                <span style="font-size:4rem;">📱</span>
+            </div>
+            <input type="text" value="00020126360014br.gov.bcb.pix0114..." readonly style="width:100%; padding:10px; border:1px solid #CBD5E1; text-align:center; border-radius:var(--radius); margin-bottom:15px;">
+            <button class="btn-primary w-100" onclick="document.getElementById('pixModal').style.display='none'; showToast('Reserva Confirmada', 'A mesa já está no seu cronograma.')">Já Paguei</button>
+            <button class="btn-secondary w-100 mt-2" onclick="document.getElementById('pixModal').style.display='none'">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="painel-usuario.js"></script>
+</body>
+</html>
