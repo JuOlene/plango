@@ -1,15 +1,16 @@
 /* Variáveis de Cores (Cores Tropicais, Azul, Laranja, Amarelo, Branco) */
 :root {
-    --primary-blue: #0A4D80;
+    --primary-blue: #00407a;
+    --dark-blue: #003366;
     --light-blue: #2392D0;
-    --bg-blue: #E9F4FB;
+    --bg-blue: #f8fbfe;
     --orange: #F26419;
-    --yellow: #F6AE2D;
+    --yellow: #f1b217;
     --white: #FFFFFF;
-    --text-dark: #2D3748;
-    --text-light: #718096;
-    --radius: 12px;
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --text-dark: #1a202c;
+    --text-light: #4a5568;
+    --radius: 10px;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 * {
@@ -26,8 +27,9 @@ body {
 }
 
 h1, h2, h3 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Bodoni Moda', serif;
     color: var(--primary-blue);
+    font-weight: 700;
 }
 
 .text-orange { color: var(--orange); }
@@ -44,10 +46,11 @@ header {
     position: fixed;
     top: 0;
     width: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     z-index: 100;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
 .nav-container {
@@ -125,45 +128,31 @@ header {
 
 .btn-login {
     background-color: transparent;
-    border: 2px solid var(--primary-blue);
+    border: 1px solid var(--primary-blue);
     color: var(--primary-blue);
-    padding: 8px 20px;
-    border-radius: 20px;
+    padding: 8px 22px;
+    border-radius: 30px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    font-family: 'Outfit', sans-serif;
 }
 
 .btn-login:hover {
     background-color: var(--primary-blue);
     color: var(--white);
+    box-shadow: 0 4px 12px rgba(0, 64, 122, 0.2);
 }
 
-.btn-business-nav {
-    border-color: var(--orange);
-    color: var(--orange);
+.link-biz {
+    color: var(--primary-blue) !important;
+    font-weight: 700 !important;
+    text-decoration: none;
+    transition: opacity 0.2s;
 }
 
-.btn-business-nav:hover {
-    background-color: var(--orange);
-    color: var(--white);
-}
-
-.btn-secondary-outline {
-    background-color: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    color: var(--white);
-    padding: 12px 24px;
-    border-radius: var(--radius);
-    font-family: 'Outfit', sans-serif;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-secondary-outline:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: var(--white);
+.link-biz:hover {
+    opacity: 0.7;
 }
 
 /* Hamburger Menu */
@@ -227,7 +216,7 @@ header {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, rgba(10, 77, 128, 0.9) 0%, rgba(10, 77, 128, 0.6) 50%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(90deg, rgba(0, 64, 122, 0.6) 0%, rgba(0, 64, 122, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
 }
 
 .hero-content {
@@ -247,41 +236,18 @@ header {
 }
 
 .hero-title {
-    font-size: 4rem;
-    line-height: 1.1;
+    font-size: 5rem;
+    line-height: 1.05;
     margin-bottom: 20px;
     color: var(--white);
+    font-weight: 700;
 }
 
 .hero-subtitle {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     margin-bottom: 40px;
-    opacity: 0.9;
-    line-height: 1.6;
-}
-
-.hero-badge {
-    display: inline-block;
-    background: rgba(246, 174, 45, 0.2);
-    color: var(--yellow);
-    padding: 8px 16px;
-    border-radius: 30px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    margin-bottom: 20px;
-    border: 1px solid rgba(246, 174, 45, 0.3);
-}
-
-.hero-actions {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.hero-trust-note {
-    font-size: 0.9rem;
-    opacity: 0.7;
-    font-style: italic;
+    opacity: 0.95;
+    font-weight: 400;
 }
 
 /* Quiz Container */
@@ -1047,120 +1013,57 @@ section {
     text-align: center;
     margin-bottom: 30px;
 }
-
-/* Instagram / Redes Sociais Section */
-.instagram-preview-card {
-    background: white;
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    max-width: 400px;
-    margin: 20px auto;
-    border: 1px solid #E2E8F0;
-}
-
-.instagram-header {
-    padding: 15px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border-bottom: 1px solid #F1F5F9;
-}
-
-.insta-avatar {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+/* AI Loader Animation */
+.ai-loader {
+    width: 60px;
+    height: 60px;
+    border: 5px solid var(--bg-blue);
+    border-top: 5px solid var(--primary-blue);
     border-radius: 50%;
-    padding: 2px;
+    margin: 0 auto;
+    animation: spin 1s linear infinite;
+    position: relative;
 }
 
-.insta-avatar-inner {
-    width: 100%;
-    height: 100%;
-    background: #eee;
-    border-radius: 50%;
-    border: 2px solid white;
+.ai-loader::after {
+    content: '🧠';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
 }
 
-.insta-info h5 {
-    font-family: 'Outfit';
-    font-size: 0.95rem;
-    color: #262626;
-    margin: 0;
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-.insta-info span {
-    font-size: 0.8rem;
-    color: #8e8e8e;
+@keyframes pulse-ai {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
 }
 
-.instagram-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    background: #efefef;
-    padding: 2px;
-}
-
-.insta-post {
-    aspect-ratio: 1/1;
-    background: #ddd;
-}
-
-.instagram-footer {
-    padding: 15px;
-    text-align: center;
-}
-
-.btn-instagram {
-    background: #0095f6;
-    color: white;
+.btn-delete {
+    background: none;
     border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.9rem;
     cursor: pointer;
-    width: 100%;
-}
-
-.social-input-group {
-    background: white;
-    padding: 30px;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    margin-bottom: 30px;
-}
-
-.social-input-group label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: 600;
-    color: var(--primary-blue);
-}
-
-.insta-handle-wrapper {
+    font-size: 1.1rem;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background 0.2s;
     display: flex;
     align-items: center;
-    background: #F8FAFC;
-    border: 1px solid #CBD5E1;
-    border-radius: var(--radius);
-    padding: 0 15px;
+    justify-content: center;
 }
 
-.insta-handle-wrapper span {
-    color: var(--text-light);
-    font-weight: 600;
-    margin-right: 5px;
+.btn-delete:hover {
+    background: #FEE2E2;
 }
 
-.insta-handle-wrapper input {
-    border: none;
-    background: transparent;
-    padding: 12px 0;
-    width: 100%;
+[contenteditable="true"]:focus, input:focus {
     outline: none;
-    font-family: 'Outfit';
-    font-size: 1rem;
+    background: rgba(226, 232, 240, 0.3) !important;
+    border-radius: 4px;
 }

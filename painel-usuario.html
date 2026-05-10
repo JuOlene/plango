@@ -190,7 +190,6 @@
                 <li><a href="#" class="active" onclick="switchView('visao-geral', this)"><span class="icon">🏠</span> Visão Geral</a></li>
                 <li><a href="#" onclick="switchView('perfil', this)"><span class="icon">🧠</span> Meu Perfil (Quiz)</a></li>
                 <li><a href="#" onclick="switchView('roteiro', this)"><span class="icon">📅</span> Roteiro Central</a></li>
-                <li><a href="#" onclick="switchView('experiencias', this)"><span class="icon">🥂</span> Experiências (Flavor)</a></li>
                 <li><a href="#" onclick="switchView('simulador', this)"><span class="icon">🕹️</span> Simulador de Rota</a></li>
                 <li><a href="#" onclick="switchView('financeiro', this)"><span class="icon">💰</span> Plano Financeiro</a></li>
                 <li><a href="#" onclick="switchView('propostas', this)"><span class="icon">📥</span> Propostas Externas</a></li>
@@ -222,16 +221,22 @@
                 </div>
 
                 <div class="grid-3" style="margin-bottom: 40px;">
-                    <div class="day-card" style="border-left-color: var(--primary-blue);">
+                    <div class="day-card" style="border-left-color: var(--primary-blue);" id="active-trip-card">
                         <h4>Viagem Atual</h4>
-                        <p class="text-light mt-2"><strong>Destino:</strong> Litoral Norte</p>
-                        <p class="text-light"><strong>Data:</strong> 05 a 07 de Maio</p>
-                        <button class="btn-primary mt-2 w-100" onclick="document.querySelectorAll('.sidebar-menu a')[2].click()">Abrir Roteiro</button>
+                        <div id="trip-details">
+                            <p class="text-light mt-2"><strong>Destino:</strong> Litoral Norte</p>
+                            <p class="text-light"><strong>Data:</strong> 05 a 07 de Maio</p>
+                            <button class="btn-primary mt-2 w-100" onclick="document.querySelectorAll('.sidebar-menu a')[2].click()">Abrir Roteiro</button>
+                        </div>
+                        <div id="no-trip-details" style="display:none;">
+                            <p class="text-light mt-2">Você ainda não tem uma viagem planejada.</p>
+                            <button class="btn-primary mt-2 w-100" onclick="startNewTrip()">Criar Meu Primeiro Roteiro 🚀</button>
+                        </div>
                     </div>
                     <div class="day-card" style="border-left-color: #27AE60;">
                         <h4>Inteligência Plango</h4>
                         <p class="text-light mt-2" style="font-size:0.9rem;">Seu modo de viagem atual está configurado para <strong>Econômico e Gastronômico</strong>. Suas sugestões estão sendo moldadas por isso.</p>
-                        <button class="btn-secondary mt-2 w-100" onclick="document.querySelectorAll('.sidebar-menu a')[1].click()">Ajustar Cérebro</button>
+                        <button class="btn-secondary mt-2 w-100" onclick="switchView('perfil')">Ajustar Cérebro</button>
                     </div>
                     <div class="day-card" style="border-left-color: var(--orange);">
                         <h4>Meta Financeira</h4>
@@ -245,8 +250,8 @@
                 <h3>O Cérebro do Planejamento 🧠</h3>
                 <p class="text-light" style="margin-bottom: 20px;">Atualize suas preferências a qualquer momento. Todas as sugestões do roteiro se ajustam automaticamente.</p>
 
-                <div class="quiz-container">
-                    <div class="progress-bar"><div class="progress-fill" id="quiz-progress" style="width:25%"></div></div>
+                <div class="quiz-container" id="quiz-container">
+                    <div class="progress-bar"><div class="progress-fill" id="quiz-progress" style="width:14%"></div></div>
 
                     <!-- Etapa 1: Orçamento -->
                     <div class="quiz-step active" id="quiz-step-1">
@@ -265,10 +270,34 @@
                         <div class="quiz-actions"><span></span><button class="btn-primary" onclick="nextQuizStep(2)">Próximo →</button></div>
                     </div>
 
-                    <!-- Etapa 2: Estilo -->
+                    <!-- Etapa 2: Companhia -->
                     <div class="quiz-step" id="quiz-step-2">
-                        <h3>Qual é o seu estilo de viagem?</h3>
+                        <h3>Com quem você vai viajar?</h3>
                         <div class="options-grid">
+                            <label class="quiz-option"><input type="radio" name="companhia" value="solo" checked> 👤 Sozinho(a)</label>
+                            <label class="quiz-option"><input type="radio" name="companhia" value="casal"> 👫 Casal / Romântico</label>
+                            <label class="quiz-option"><input type="radio" name="companhia" value="familia"> 👨‍👩‍👧‍👦 Família (com crianças)</label>
+                            <label class="quiz-option"><input type="radio" name="companhia" value="amigos"> 🥳 Grupo de Amigos</label>
+                        </div>
+                        <div class="quiz-actions"><button class="btn-secondary" onclick="nextQuizStep(1)">← Voltar</button><button class="btn-primary" onclick="nextQuizStep(3)">Próximo →</button></div>
+                    </div>
+
+                    <!-- Etapa 3: Ambiente -->
+                    <div class="quiz-step" id="quiz-step-3">
+                        <h3>Qual clima/ambiente você prefere?</h3>
+                        <div class="options-grid">
+                            <label class="quiz-option"><input type="radio" name="ambiente" value="praia" checked> 🏖️ Praia e Sol</label>
+                            <label class="quiz-option"><input type="radio" name="ambiente" value="frio"> ❄️ Frio e Montanha</label>
+                            <label class="quiz-option"><input type="radio" name="ambiente" value="natureza"> 🌿 Natureza e Ecoturismo</label>
+                            <label class="quiz-option"><input type="radio" name="ambiente" value="cidade"> 🏙️ Cidade e Urbano</label>
+                        </div>
+                        <div class="quiz-actions"><button class="btn-secondary" onclick="nextQuizStep(2)">← Voltar</button><button class="btn-primary" onclick="nextQuizStep(4)">Próximo →</button></div>
+                    </div>
+
+                    <!-- Etapa 4: Estilo -->
+                    <div class="quiz-step" id="quiz-step-4">
+                        <h3>Qual é o seu estilo de viagem?</h3>
+                        <div class="options-grid" id="options-grid-4">
                             <label class="quiz-option"><input type="checkbox" value="praia" checked> 🏖️ Praia & Mar</label>
                             <label class="quiz-option"><input type="checkbox" value="aventura"> 🧗 Aventura</label>
                             <label class="quiz-option"><input type="checkbox" value="cultura"> 🏛️ Cultura & Arte</label>
@@ -276,11 +305,16 @@
                             <label class="quiz-option"><input type="checkbox" value="noturno"> 🎉 Vida Noturna</label>
                             <label class="quiz-option"><input type="checkbox" value="natureza"> 🌿 Natureza</label>
                         </div>
-                        <div class="quiz-actions"><button class="btn-secondary" onclick="nextQuizStep(1)">← Voltar</button><button class="btn-primary" onclick="nextQuizStep(3)">Próximo →</button></div>
+                        <div class="custom-option-container" id="custom-container-4" style="display:none; margin-bottom:15px; gap:10px;">
+                            <input type="text" id="custom-input-4" placeholder="Ex: 🏄 Surf" class="form-input" style="margin-bottom:0; flex:1;">
+                            <button class="btn-primary" onclick="confirmCustomOption(4)">Adicionar</button>
+                        </div>
+                        <button class="btn-secondary w-100" style="margin-bottom:20px; border:1px dashed var(--primary-blue); background:transparent; color:var(--primary-blue);" id="btn-add-4" onclick="showCustomInput(4)">+ Personalizar Estilo</button>
+                        <div class="quiz-actions"><button class="btn-secondary" onclick="nextQuizStep(3)">← Voltar</button><button class="btn-primary" onclick="nextQuizStep(5)">Próximo →</button></div>
                     </div>
 
-                    <!-- Etapa 3: Hospedagem -->
-                    <div class="quiz-step" id="quiz-step-3">
+                    <!-- Etapa 5: Hospedagem -->
+                    <div class="quiz-step" id="quiz-step-5">
                         <h3>Que tipo de hospedagem você prefere?</h3>
                         <div class="options-grid">
                             <label class="quiz-option"><input type="radio" name="hospedagem" value="hostel"> 🛏️ Hostel / Econômico</label>
@@ -295,13 +329,13 @@
                                 <option>Tranquilo — foco em relaxar</option>
                             </select>
                         </div>
-                        <div class="quiz-actions"><button class="btn-secondary" onclick="nextQuizStep(2)">← Voltar</button><button class="btn-primary" onclick="nextQuizStep(4)">Próximo →</button></div>
+                        <div class="quiz-actions"><button class="btn-secondary" onclick="nextQuizStep(4)">← Voltar</button><button class="btn-primary" onclick="nextQuizStep(6)">Próximo →</button></div>
                     </div>
 
-                    <!-- Etapa 4: Gastronomia -->
-                    <div class="quiz-step" id="quiz-step-4">
+                    <!-- Etapa 6: Gastronomia -->
+                    <div class="quiz-step" id="quiz-step-6">
                         <h3>O que você mais curte em gastronomia?</h3>
-                        <div class="options-grid">
+                        <div class="options-grid" id="options-grid-6">
                             <label class="quiz-option"><input type="checkbox" value="frutos-mar" checked> 🦞 Frutos do Mar</label>
                             <label class="quiz-option"><input type="checkbox" value="churrasco"> 🥩 Churrasco & Carnes</label>
                             <label class="quiz-option"><input type="checkbox" value="vegano"> 🥗 Vegano / Natural</label>
@@ -309,15 +343,21 @@
                             <label class="quiz-option"><input type="checkbox" value="fine-dining" checked> 🍷 Fine Dining</label>
                             <label class="quiz-option"><input type="checkbox" value="feiras"> 🌽 Feiras Culturais</label>
                         </div>
-                        <div class="quiz-actions"><button class="btn-secondary" onclick="nextQuizStep(3)">← Voltar</button><button class="btn-primary" onclick="saveQuiz()">Salvar Perfil ✓</button></div>
+                        <div class="custom-option-container" id="custom-container-6" style="display:none; margin-bottom:15px; gap:10px;">
+                            <input type="text" id="custom-input-6" placeholder="Ex: 🍕 Italiana" class="form-input" style="margin-bottom:0; flex:1;">
+                            <button class="btn-primary" onclick="confirmCustomOption(6)">Adicionar</button>
+                        </div>
+                        <button class="btn-secondary w-100" style="margin-bottom:20px; border:1px dashed var(--primary-blue); background:transparent; color:var(--primary-blue);" id="btn-add-6" onclick="showCustomInput(6)">+ Personalizar Gastronomia</button>
+                        <div class="quiz-actions"><button class="btn-secondary" onclick="nextQuizStep(5)">← Voltar</button><button class="btn-primary" onclick="saveQuiz()">Finalizar Configuração ✓</button></div>
                     </div>
 
-                    <!-- Confirmação -->
-                    <div class="quiz-step" id="quiz-step-done">
-                        <div class="success-animation">🧠✅</div>
-                        <h3 style="text-align:center;">Perfil Atualizado!</h3>
-                        <p style="text-align:center; color:var(--text-light); margin-bottom:20px;">Todas as sugestões de roteiro, gastronomia e hospedagem foram recalibradas com base nas suas preferências.</p>
-                        <button class="btn-primary w-100" onclick="nextQuizStep(1); document.getElementById('quiz-progress').style.width='25%'">Editar Novamente</button>
+                    <!-- Processamento -->
+                    <div class="quiz-step" id="quiz-step-processing">
+                        <div style="text-align:center; padding:40px;">
+                            <div class="ai-loader"></div>
+                            <h3 style="margin-top:20px;">IA Plango está processando...</h3>
+                            <p class="text-light">Sintonizando com suas preferências.</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -325,9 +365,12 @@
             <!-- 3. Roteiro Central -->
             <section id="roteiro" class="view-section">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-                    <div>
-                        <h3>Roteiro: Litoral Norte 🏖️</h3>
-                        <p class="text-light">Gerado com base no seu perfil: <strong>Praia, Gastronomia, Fim de Semana</strong></p>
+                    <div style="flex: 1;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <input type="text" id="trip-title-input" value="Litoral Norte" style="font-family:'Playfair Display'; font-size:1.8rem; font-weight:700; color:var(--primary-blue); border:none; background:transparent; width:100%; border-bottom:2px dashed #CBD5E1;">
+                            <span id="trip-emoji" style="font-size:1.8rem;">🏖️</span>
+                        </div>
+                        <input type="text" id="trip-subtitle-input" value="Praia, Gastronomia, Fim de Semana" style="color:var(--text-light); border:none; background:transparent; width:100%; margin-top:5px; font-size:0.9rem; border-bottom:1px dashed #E2E8F0;">
                     </div>
                     <span class="tag" style="background:#27AE60;color:white;padding:8px 15px;">3 dias &middot; R$ 1.850 estimado</span>
                 </div>
@@ -339,69 +382,125 @@
 
                 <div id="roteiro-cronograma" class="sub-view active">
                     <!-- DIA 1 -->
-                    <div class="day-card">
-                        <div class="day-header"><h3>Dia 1 &mdash; Chegada &amp; Primeira Praia</h3><span class="text-orange" style="font-weight:bold;">Sexta-feira</span></div>
-                        <div class="item-list">
-                            <div class="trip-item">
-                                <div class="item-info"><h4>✈️ Vôo + Transfer</h4><p>Saída 07h30 · Chegada 09h00 · Transfer incluído.</p></div>
-                                <div class="item-controls">
-                                    <select class="select-hotel" id="hotel-selector" onchange="recalculateBudget()">
-                                        <option value="150">Hostel Econômico (+R$150/dia)</option>
-                                        <option value="350" selected>Pousada Charmosa (+R$350/dia)</option>
-                                        <option value="900">Resort 5 Estrelas (+R$900/dia)</option>
-                                    </select>
-                                    <span class="price-tag" id="hotel-price">R$ 350</span>
-                                </div>
+                    <div class="day-header">
+                        <div style="display:flex; align-items:center; gap:15px; flex:1;">
+                            <h3 contenteditable="true" onblur="updateBrain()">Dia 1 &mdash; Chegada &amp; Primeira Praia</h3>
+                            <span class="text-orange" style="font-weight:bold; font-size:0.9rem;">Sexta-feira</span>
+                        </div>
+                        <button class="btn-secondary" style="padding:5px 10px; font-size:0.8rem;" onclick="addItemToTrip('day-1-items')">+ Adicionar Item</button>
+                    </div>
+                    <div class="item-list" id="day-1-items">
+                        <div class="trip-item">
+                            <div class="item-info">
+                                <h4 contenteditable="true">✈️ Vôo + Transfer</h4>
+                                <p contenteditable="true">Saída 07h30 · Chegada 09h00 · Transfer incluído.</p>
                             </div>
-                            <div class="trip-item" style="border-left:4px solid #2392D0;">
-                                <div class="item-info"><h4>🏖️ Praia do Forte (10h–14h)</h4><p>Tranquila e paradisíaca — recomendada para o seu perfil de relaxamento.</p></div>
-                                <div class="item-controls"><span class="price-tag" style="color:#27AE60;">Grátis</span></div>
+                            <div class="item-controls">
+                                <select class="select-hotel" id="hotel-selector" onchange="recalculateBudget()">
+                                    <option value="150">Hostel Econômico (+R$150/dia)</option>
+                                    <option value="350" selected>Pousada Charmosa (+R$350/dia)</option>
+                                    <option value="900">Resort 5 Estrelas (+R$900/dia)</option>
+                                </select>
+                                <span class="price-tag" id="hotel-price">R$ 350</span>
+                                <button class="btn-delete" onclick="this.closest('.trip-item').remove(); recalculateBudget()">🗑️</button>
                             </div>
-                            <div class="trip-item" style="border-left:4px solid var(--orange);">
-                                <div class="item-info"><h4>🍽️ Almoço: Bistrô do Litoral (14h) &mdash; via Flavor Route</h4><p>Frutos do Mar · 5 estrelas · Selecionado pelo seu perfil gastronômico.</p></div>
-                                <div class="item-controls">
-                                    <span class="price-tag">~R$ 90/pessoa</span>
-                                    <a href="https://eduardarodriguesz.github.io/FlavorRoute/" target="_blank" class="btn-primary" style="font-size:0.8rem;padding:8px 12px;text-decoration:none;">Ver no Flavor Route 🔗</a>
-                                </div>
+                        </div>
+                        <div class="trip-item" style="border-left:4px solid #2392D0;">
+                            <div class="item-info">
+                                <h4 contenteditable="true">🏖️ Praia do Forte (10h–14h)</h4>
+                                <p contenteditable="true">Tranquila e paradisíaca — recomendada para o seu perfil de relaxamento.</p>
                             </div>
-                            <div class="trip-item" style="border-left:4px solid var(--yellow);">
-                                <div class="item-info"><h4>🎉 Festa na Areia (22h)</h4><p>Evento sazonal · DJ local · Recomendado para o seu perfil "Vida Noturna".</p></div>
-                                <div class="item-controls"><span class="price-tag">R$ 30 couvert</span></div>
+                            <div class="item-controls">
+                                <span class="price-tag" style="color:#27AE60;">Grátis</span>
+                                <button class="btn-delete" onclick="this.closest('.trip-item').remove(); recalculateBudget()">🗑️</button>
+                            </div>
+                        </div>
+                        <div class="trip-item" style="border-left:4px solid var(--orange);">
+                            <div class="item-info">
+                                <h4 contenteditable="true">🍽️ Almoço: Bistrô do Litoral (14h)</h4>
+                                <p contenteditable="true">Frutos do Mar · 5 estrelas · Selecionado pelo seu perfil gastronômico.</p>
+                            </div>
+                            <div class="item-controls">
+                                <span class="price-tag">R$ 90</span>
+                                <button class="btn-primary" style="font-size:0.8rem;padding:8px 12px;" onclick="openFlavorRoute()">Flavor Route 🔗</button>
+                                <button class="btn-delete" onclick="this.closest('.trip-item').remove(); recalculateBudget()">🗑️</button>
+                            </div>
+                        </div>
+                        <div class="trip-item" style="border-left:4px solid var(--yellow);">
+                            <div class="item-info">
+                                <h4 contenteditable="true">🎉 Festa na Areia (22h)</h4>
+                                <p contenteditable="true">Evento sazonal · DJ local · Recomendado para o seu perfil "Vida Noturna".</p>
+                            </div>
+                            <div class="item-controls">
+                                <span class="price-tag">R$ 30</span>
+                                <button class="btn-delete" onclick="this.closest('.trip-item').remove(); recalculateBudget()">🗑️</button>
                             </div>
                         </div>
                     </div>
+
                     <!-- DIA 2 -->
-                    <div class="day-card">
-                        <div class="day-header"><h3>Dia 2 &mdash; Cultura, Feira &amp; Pôr do Sol</h3><span class="text-orange" style="font-weight:bold;">Sábado</span></div>
-                        <div class="item-list">
+                    <div class="day-card mt-4">
+                        <div class="day-header">
+                            <div style="display:flex; align-items:center; gap:15px; flex:1;">
+                                <h3 contenteditable="true">Dia 2 &mdash; Cultura, Feira &amp; Pôr do Sol</h3>
+                                <span class="text-orange" style="font-weight:bold; font-size:0.9rem;">Sábado</span>
+                            </div>
+                            <button class="btn-secondary" style="padding:5px 10px; font-size:0.8rem;" onclick="addItemToTrip('day-2-items')">+ Adicionar Item</button>
+                        </div>
+                        <div class="item-list" id="day-2-items">
                             <div class="trip-item" style="border-left:4px solid #27AE60;">
-                                <div class="item-info"><h4>🌽 Feira Gastronômica Local (09h–12h)</h4><p>Produtores locais, artesanato e culinária regional · entrada gratuita.</p></div>
-                                <div class="item-controls"><span class="price-tag" style="color:#27AE60;">Grátis</span></div>
+                                <div class="item-info">
+                                    <h4 contenteditable="true">🌽 Feira Gastronômica Local (09h–12h)</h4>
+                                    <p contenteditable="true">Produtores locais, artesanato e culinária regional · entrada gratuita.</p>
+                                </div>
+                                <div class="item-controls">
+                                    <span class="price-tag" style="color:#27AE60;">Grátis</span>
+                                    <button class="btn-delete" onclick="this.closest('.trip-item').remove(); recalculateBudget()">🗑️</button>
+                                </div>
                             </div>
                             <div class="trip-item" style="border-left:4px solid #2392D0;">
-                                <div class="item-info"><h4>🏄 Aula de Surf / Stand-up Paddle (13h)</h4><p>Para o seu perfil aventureiro · guia certificado incluso.</p></div>
-                                <div class="item-controls"><span class="price-tag">R$ 80</span><label><input type="checkbox" checked onchange="recalculateBudget()"> Incluir</label></div>
+                                <div class="item-info">
+                                    <h4 contenteditable="true">🏄 Aula de Surf / Stand-up Paddle (13h)</h4>
+                                    <p contenteditable="true">Para o seu perfil aventureiro · guia certificado incluso.</p>
+                                </div>
+                                <div class="item-controls">
+                                    <span class="price-tag">R$ 80</span>
+                                    <label><input type="checkbox" checked onchange="recalculateBudget()"> Incluir</label>
+                                    <button class="btn-delete" onclick="this.closest('.trip-item').remove(); recalculateBudget()">🗑️</button>
+                                </div>
                             </div>
                             <div class="trip-item" style="border-left:4px solid var(--orange);">
-                                <div class="item-info"><h4>🍷 Jantar Fine Dining: Restaurante Oásis (20h)</h4><p>Menu degustação 7 passos · Recomendado pelo Flavor Route.</p></div>
+                                <div class="item-info">
+                                    <h4 contenteditable="true">🍷 Jantar Fine Dining: Restaurante Oásis (20h)</h4>
+                                    <p contenteditable="true">Menu degustação 7 passos · Recomendado pelo Flavor Route.</p>
+                                </div>
                                 <div class="item-controls">
-                                    <span class="price-tag">~R$ 200/pessoa</span>
-                                    <a href="https://eduardarodriguesz.github.io/FlavorRoute/" target="_blank" class="btn-primary" style="font-size:0.8rem;padding:8px 12px;text-decoration:none;">Reservar via Flavor Route 🔗</a>
+                                    <span class="price-tag">R$ 200</span>
+                                    <button class="btn-primary" style="font-size:0.8rem;padding:8px 12px;" onclick="openFlavorRoute()">Reservar 🔗</button>
+                                    <button class="btn-delete" onclick="this.closest('.trip-item').remove(); recalculateBudget()">🗑️</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <!-- DIA 3 -->
-                    <div class="day-card">
-                        <div class="day-header"><h3>Dia 3 &mdash; Manhã Livre &amp; Retorno</h3><span class="text-orange" style="font-weight:bold;">Domingo</span></div>
+                    <div class="day-card mt-4">
+                        <div class="day-header">
+                            <h3 contenteditable="true">Dia 3 &mdash; Retorno</h3>
+                            <span class="text-orange" style="font-weight:bold; font-size:0.9rem;">Domingo</span>
+                        </div>
                         <div class="item-list">
-                            <div class="trip-item" style="border-left:4px solid #2392D0;">
-                                <div class="item-info"><h4>🐠 Mergulho Ecológico (08h)</h4><p>Passeio de barco até recife de corais · equipamentos incluídos.</p></div>
-                                <div class="item-controls"><span class="price-tag">R$ 120</span><label><input type="checkbox" onchange="recalculateBudget()"> Incluir</label></div>
+                            <div class="trip-item">
+                                <div class="item-info"><h4>🍳 Café da Manhã &amp; Check-out</h4><p>Até as 11h00.</p></div>
+                                <div class="item-controls"><span class="price-tag" style="color:#27AE60;">Grátis</span></div>
                             </div>
                             <div class="trip-item">
-                                <div class="item-info"><h4>✈️ Voo de Retorno (16h)</h4><p>Check-out 12h · Transfer para o aeroporto às 13h30.</p></div>
-                                <div class="item-controls"><span class="price-tag">Incluído</span></div>
+                                <div class="item-info"><h4>🛍️ Compras de Artesanato</h4><p>Centro da cidade.</p></div>
+                                <div class="item-controls"><span class="price-tag">Opcional</span></div>
+                            </div>
+                            <div class="trip-item">
+                                <div class="item-info"><h4>🚐 Transfer para Aeroporto</h4><p>Saída 14h00.</p></div>
+                                <div class="item-controls"><span class="price-tag">Incluso</span></div>
                             </div>
                         </div>
                     </div>
@@ -435,7 +534,7 @@
                         <h4 style="color:white;font-size:1.3rem;">Explorar o catálogo completo</h4>
                         <p style="opacity:0.85;margin-top:5px;">Acesse todos os restaurantes, bares e experiências locais selecionados pelos especialistas do Flavor Route.</p>
                     </div>
-                    <a href="https://eduardarodriguesz.github.io/FlavorRoute/" target="_blank" class="btn-primary" style="white-space:nowrap;background:var(--yellow);color:var(--text-dark);text-decoration:none;padding:12px 24px;border-radius:var(--radius);font-weight:600;">🔗 Abrir Flavor Route</a>
+                    <button class="btn-primary" style="white-space:nowrap;background:var(--yellow);color:var(--text-dark);padding:12px 24px;border-radius:var(--radius);font-weight:600;cursor:pointer;border:none;" onclick="openFlavorRoute()">🔗 Abrir Flavor Route</button>
                 </div>
 
                 <div class="grid-3">
@@ -446,7 +545,7 @@
                         <div class="inspiration-content">
                             <h4>Bistrô do Litoral</h4>
                             <p>5 estrelas Flavor Route · Frutos do Mar · Perfeito para o seu perfil.</p>
-                            <a href="https://eduardarodriguesz.github.io/FlavorRoute/" target="_blank" class="btn-primary mt-2 w-100" style="display:block;text-align:center;text-decoration:none;">🔗 Ver & Reservar no Flavor Route</a>
+                            <button class="btn-primary mt-2 w-100" style="display:block;text-align:center;cursor:pointer;" onclick="openFlavorRoute()">🔗 Ver & Reservar no Flavor Route</button>
                         </div>
                     </div>
                     <div class="inspiration-card">
@@ -456,7 +555,7 @@
                         <div class="inspiration-content">
                             <h4>Restaurante Oásis</h4>
                             <p>Menu degustação 7 passos · Experiência única · Reserva antecipada.</p>
-                            <a href="https://eduardarodriguesz.github.io/FlavorRoute/" target="_blank" class="btn-primary mt-2 w-100" style="display:block;text-align:center;text-decoration:none;">🔗 Ver & Reservar no Flavor Route</a>
+                            <button class="btn-primary mt-2 w-100" style="display:block;text-align:center;cursor:pointer;" onclick="openFlavorRoute()">🔗 Ver & Reservar no Flavor Route</button>
                         </div>
                     </div>
                     <div class="inspiration-card">

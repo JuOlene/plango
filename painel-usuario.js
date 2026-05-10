@@ -32,56 +32,187 @@ function nextQuizStep(stepNum) {
     // Esconde todos os steps
     document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('#quiz-step-done').forEach(s => s.classList.remove('active'));
+    document.getElementById('quiz-step-processing').classList.remove('active');
 
     const target = document.getElementById('quiz-step-' + stepNum);
     if (target) {
         target.classList.add('active');
     }
 
-    // Atualiza barra de progresso
-    const progressMap = {1: '25%', 2: '50%', 3: '75%', 4: '100%'};
+    // Atualiza barra de progresso (6 etapas)
+    const progressMap = {1: '16%', 2: '32%', 3: '48%', 4: '64%', 5: '80%', 6: '100%'};
     const bar = document.getElementById('quiz-progress');
     if (bar && progressMap[stepNum]) bar.style.width = progressMap[stepNum];
 }
 
 function saveQuiz() {
-    document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
-    const done = document.getElementById('quiz-step-done');
-    if (done) done.classList.add('active');
-    const bar = document.getElementById('quiz-progress');
-    if (bar) bar.style.width = '100%';
+    const stepProcessing = document.getElementById('quiz-step-processing');
+    const currentStep = document.querySelector('.quiz-step.active');
+    
+    if (currentStep) currentStep.classList.remove('active');
+    stepProcessing.classList.add('active');
 
-    showToast("🧠 Cérebro Atualizado!", "Seu roteiro, gastronomia e hospedagem foram recalibrados com base no seu perfil.");
+    // Simula processamento da IA
+    setTimeout(() => {
+        generatePersonalizedTrip();
+        
+        // Esconde o quiz e mostra o dashboard após o processamento
+        document.querySelector('.view-section.active').classList.remove('active');
+        document.getElementById('visao-geral').classList.add('active');
+        
+        // Atualiza os links da sidebar
+        document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+        document.querySelector('a[onclick*="visao-geral"]').classList.add('active');
+
+        showToast("✅ Roteiro Gerado!", "Sua viagem personalizada está pronta para ser explorada.");
+    }, 2500);
+}
+
+function generatePersonalizedTrip() {
+    // Captura dados do quiz
+    const orcamento = document.getElementById('quiz-orcamento').value;
+    const ambiente = document.querySelector('input[name="ambiente"]:checked')?.value || 'praia';
+    const companhia = document.querySelector('input[name="companhia"]:checked')?.value || 'solo';
+    
+    const tripTitleInput = document.getElementById('trip-title-input');
+    const tripEmoji = document.getElementById('trip-emoji');
+    const tripSubtitleInput = document.getElementById('trip-subtitle-input');
+    
+    // Lógica de Sugestão
+    let destino = "Litoral Norte";
+    let emoji = "🏖️";
+    let resumo = "Praia, Gastronomia, Fim de Semana";
+
+    if (ambiente === 'frio') {
+        destino = "Gramado & Canela";
+        emoji = "❄️";
+        resumo = "Frio, Vinho, Fondue, Romance";
+    } else if (ambiente === 'natureza') {
+        destino = "Chapada dos Veadeiros";
+        emoji = "🌿";
+        resumo = "Cachoeiras, Trilhas, Misticismo, Aventura";
+    } else if (ambiente === 'cidade') {
+        destino = "São Paulo Cultural";
+        emoji = "🏙️";
+        resumo = "Museus, Gastronomia, Compras, Vida Noturna";
+    }
+
+    // Preenche como sugestão (editável)
+    tripTitleInput.value = destino;
+    tripEmoji.innerText = emoji;
+    tripSubtitleInput.value = `Para ${companhia.toUpperCase()} - Perfil Sugerido: ${resumo}`;
+    
+    // Atualiza o orçamento no dashboard
+    tripTotalBudget = parseInt(orcamento) || 1500;
+    const budgetDisplay = document.getElementById('total-budget');
+    if (budgetDisplay) budgetDisplay.innerText = `R$ ${tripTotalBudget.toLocaleString('pt-BR')},00`;
+    
+    recalculateBudget();
+    showToast("✨ Sugestões Aplicadas", "Ajustamos o roteiro com base no seu perfil, mas você pode mudar o que quiser!");
+}
+
+// Gestão de Itens do Roteiro (Manual)
+function addItemToTrip(dayListId) {
+    const list = document.getElementById(dayListId);
+    const newItem = document.createElement('div');
+    newItem.className = 'trip-item';
+    newItem.style.animation = 'fadeIn 0.3s';
+    newItem.innerHTML = `
+        <div class="item-info">
+            <h4 contenteditable="true">✨ Nova Atividade</h4>
+            <p contenteditable="true">Clique para editar a descrição e horário...</p>
+        </div>
+        <div class="item-controls">
+            <span class="price-tag">R$ 0</span>
+            <button class="btn-delete" onclick="this.closest('.trip-item').remove(); recalculateBudget()">🗑️</button>
+        </div>
+    `;
+    list.appendChild(newItem);
+    recalculateBudget();
+}
+
+// Funções de Personalização do Quiz
+function showCustomInput(stepNum) {
+    document.getElementById('custom-container-' + stepNum).style.display = 'flex';
+    document.getElementById('btn-add-' + stepNum).style.display = 'none';
+    document.getElementById('custom-input-' + stepNum).focus();
+}
+
+function confirmCustomOption(stepNum) {
+    const input = document.getElementById('custom-input-' + stepNum);
+    const value = input.value.trim();
+    
+    if (value === "") {
+        showToast("Ops!", "Por favor, digite o nome da opção.");
+        return;
+    }
+
+    const grid = document.getElementById('options-grid-' + stepNum);
+    
+    // Criar novo label de opção
+    const label = document.createElement('label');
+    label.className = 'quiz-option';
+    label.style.animation = 'fadeIn 0.4s';
+    
+    // Tenta extrair um emoji ou usa um padrão
+    const hasEmoji = /\p{Emoji}/u.test(value);
+    const finalValue = hasEmoji ? value : "✨ " + value;
+
+    label.innerHTML = `<input type="checkbox" value="${value.toLowerCase().replace(/\s+/g, '-')}" checked> ${finalValue}`;
+    
+    grid.appendChild(label);
+    
+    // Limpar e esconder input
+    input.value = "";
+    document.getElementById('custom-container-' + stepNum).style.display = 'none';
+    document.getElementById('btn-add-' + stepNum).style.display = 'block';
+    
+    showToast("Opção Adicionada!", `"${value}" agora faz parte do seu perfil.`);
 }
 
 // Lógica de Orçamento do Roteiro Central
 let tripTotalBudget = 0;
 
 function recalculateBudget() {
-    let total = 800; // Voo fixo
+    let total = 800; // Voo base (fixo)
     
     const hotelSelect = document.getElementById('hotel-selector');
-    const hotelPrice = parseInt(hotelSelect.value);
-    
-    document.getElementById('hotel-price').innerText = `R$ ${hotelPrice}`;
-    total += (hotelPrice * 2); // 2 noites fixas no roteiro base
+    if (hotelSelect) {
+        const hotelPrice = parseInt(hotelSelect.value);
+        document.getElementById('hotel-price').innerText = `R$ ${hotelPrice}`;
+        total += (hotelPrice * 2); // 2 noites
+    }
 
-    // Adiciona estimativa de gastos de lazer/gastronomia
-    total += 350; 
+    // Soma itens marcados (checkboxes)
+    const checkboxes = document.querySelectorAll('.item-controls input[type="checkbox"]:checked');
+    checkboxes.forEach(cb => {
+        const item = cb.closest('.trip-item');
+        const priceTag = item.querySelector('.price-tag').innerText;
+        const price = parseInt(priceTag.replace('R$', '').trim()) || 0;
+        total += price;
+    });
+
+    // Soma outros itens com preços fixos (ex: Bistrô, Festa) que não têm checkbox mas estão no roteiro
+    const fixedPrices = document.querySelectorAll('.trip-item:not(:has(input[type="checkbox"])) .price-tag');
+    fixedPrices.forEach(pt => {
+        if (pt.innerText.includes('Grátis')) return;
+        const price = parseInt(pt.innerText.replace('R$', '').trim()) || 0;
+        total += price;
+    });
 
     tripTotalBudget = total;
 
     const budgetDisplay = document.getElementById('total-budget');
-    budgetDisplay.style.transform = 'scale(1.1)';
-    budgetDisplay.innerText = `R$ ${total.toLocaleString('pt-BR')},00`;
+    if (budgetDisplay) {
+        budgetDisplay.style.transform = 'scale(1.1)';
+        budgetDisplay.innerText = `R$ ${total.toLocaleString('pt-BR')},00`;
+    }
     
-    document.getElementById('custo-roteiro-calc').innerText = `R$ ${total.toLocaleString('pt-BR')},00`;
+    const calcDisplay = document.getElementById('custo-roteiro-calc');
+    if (calcDisplay) calcDisplay.innerText = `R$ ${total.toLocaleString('pt-BR')},00`;
     
-    setTimeout(() => {
-        budgetDisplay.style.transform = 'scale(1)';
-    }, 200);
-
-    calculateFinance(); // Atualiza financeiro
+    setTimeout(() => { if (budgetDisplay) budgetDisplay.style.transform = 'scale(1)'; }, 200);
+    calculateFinance(); 
 }
 
 // Notificações Toast em Tempo Real
@@ -160,6 +291,20 @@ function surpriseTrip() {
     showToast("🎁 Viagem Surpresa", "Destino sorteado dentro do seu limite de R$ 3.000! Você vai para um Chalé Ecológico na Serra.");
 }
 
+function startNewTrip() {
+    // Esconde navegação para forçar o quiz inicial (opcional, ou apenas muda aba)
+    document.getElementById('trip-details').style.display = 'none';
+    document.getElementById('no-trip-details').style.display = 'block';
+    
+    // Abre o quiz para o usuário começar do zero
+    switchView('perfil');
+    showToast("Bem-vindo!", "Vamos começar definindo seu orçamento e estilo de viagem.");
+}
+
+function openFlavorRoute() {
+    window.open('https://eduardarodriguesz.github.io/FlavorRoute/', '_blank', 'noopener,noreferrer');
+}
+
 // Módulo de Gastronomia / Flavor Route
 function showPixModal(restaurantName, price) {
     const modal = document.getElementById('pixModal');
@@ -212,4 +357,9 @@ function runSimulation() {
 window.onload = function() {
     recalculateBudget();
     runSimulation();
+    
+    // Se for um novo acesso (simulado), mostra a tela de "criar nova"
+    if(window.location.hash === '#new') {
+        startNewTrip();
+    }
 };

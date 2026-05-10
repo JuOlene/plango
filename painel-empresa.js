@@ -15,7 +15,7 @@ function switchView(viewId, element) {
 
 // Lógica de Chat (Relacionamento)
 function startChat(clientName) {
-    document.getElementById('chat-title').innerText = `Relacionamento: ${clientName}`;
+    document.getElementById('chat-title').innerText = `Negociação: ${clientName}`;
     
     const chatHistory = document.getElementById('chat-history');
     chatHistory.innerHTML = `
@@ -25,8 +25,12 @@ function startChat(clientName) {
     `;
 
     // Troca para a aba de chat
-    const chatLink = document.querySelectorAll('.sidebar-menu a')[4];
-    chatLink.click();
+    const menuLinks = document.querySelectorAll('.sidebar-menu a');
+    let chatLink;
+    menuLinks.forEach(link => {
+        if(link.innerText.includes('Relacionamento')) chatLink = link;
+    });
+    if(chatLink) chatLink.click();
 }
 
 function sendMessage() {
@@ -85,6 +89,24 @@ function showToast(title, message) {
     }, 5000);
 }
 
+function triggerToast(message, icon = '🚀') {
+    const container = document.getElementById('toast-container');
+    if(!container) return;
+    
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `
+        <div class="toast-icon">${icon}</div>
+        <div class="toast-content">
+            <h4>Ação Realizada</h4>
+            <p>${message}</p>
+        </div>
+    `;
+    
+    container.appendChild(toast);
+    setTimeout(() => { toast.remove(); }, 5000);
+}
+
 // Automação e Gerador de Pacotes
 function simulatePackageCreation() {
     showToast("Pacote Criado!", "Sua nova experiência foi adicionada ao catálogo. O sistema começará a fazer Match com clientes.");
@@ -92,23 +114,6 @@ function simulatePackageCreation() {
 
 function triggerAutomationToast() {
     showToast("Campanha Ativa", "A automação está rodando. O pacote 'Especial Gastronomia' está sendo enviado para 45 usuários compatíveis.");
-}
-
-// Notificações Toast Genéricas
-function triggerToast(title, message) {
-    showToast(title, message);
-}
-
-// Redes Sociais: Atualizar Prévia do Instagram
-function updateInstaPreview() {
-    const handle = document.getElementById('insta-handle').value;
-    const previewHandle = document.getElementById('preview-handle');
-    
-    if (handle.trim() !== "") {
-        previewHandle.innerText = handle;
-    } else {
-        previewHandle.innerText = "suaempresa";
-    }
 }
 
 // Alerta de Nova Demanda Simulado
