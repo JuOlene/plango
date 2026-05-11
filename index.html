@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap"
         rel="stylesheet">
 </head>
 
@@ -19,7 +19,7 @@
     <!-- Navbar -->
     <header id="header">
         <div class="nav-container">
-            <a href="index.html" class="logo">
+            <a href="#" class="logo">
                 <svg width="180" height="45" viewBox="0 0 180 45" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g fill="var(--primary-blue)">
                         <!-- Ilha base -->
@@ -41,9 +41,10 @@
             <nav class="desktop-menu">
                 <a href="#explore">Explorar</a>
                 <a href="#como-funciona">Como Funciona</a>
+                <a href="#empresas">Empresas</a>
                 <a href="#sobre">Sobre</a>
-                <button class="btn-login" onclick="openModal('businessModal')">Perfil de Empresa</button>
                 <button class="btn-login" onclick="openModal('loginModal')">Acesso à Conta</button>
+                <button class="btn-login btn-business-nav" onclick="openModal('businessModal')">Área da Empresa</button>
             </nav>
             <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
                 <span></span>
@@ -57,9 +58,10 @@
     <div class="mobile-menu" id="mobile-menu">
         <a href="#explore" onclick="toggleMobileMenu()">Explorar</a>
         <a href="#como-funciona" onclick="toggleMobileMenu()">Como Funciona</a>
+        <a href="#empresas" onclick="toggleMobileMenu()">Empresas</a>
         <a href="#sobre" onclick="toggleMobileMenu()">Sobre</a>
-        <button class="btn-login" onclick="toggleMobileMenu(); openModal('businessModal')">Perfil de Empresa</button>
         <button class="btn-login" onclick="toggleMobileMenu(); openModal('loginModal')">Acesso à Conta</button>
+        <button class="btn-login btn-business-nav" onclick="toggleMobileMenu(); openModal('businessModal')">Área da Empresa</button>
     </div>
 
     <!-- Hero Section -->
@@ -68,18 +70,13 @@
         <div class="hero-content">
             <div class="hero-text-side">
                 <h1 class="hero-title">Sua viagem dos sonhos,<br><span class="text-highlight">sem estresse.</span></h1>
-                <p class="hero-subtitle">Planejamento inteligente para quem não tem tempo. Diga seu orçamento e
-                    preferências, e nós montamos tudo para você.</p>
+                <p class="hero-subtitle">O planejamento inteligente que conecta viajantes a experiências autênticas e ajuda empresas a crescerem com visibilidade estratégica.</p>
 
-
-                <!-- Chamada para Ação Simples -->
-                <div style="margin-top: 40px;">
-                    <button class="btn-primary"
-                        style="font-size: 1.2rem; padding: 15px 40px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);"
-                        onclick="window.location.href='painel-usuario.html#new'">Comece a Planejar Agora ➔</button>
-                    <p style="margin-top: 15px; font-size: 0.9rem; color: var(--white); opacity: 0.8;">Criação de perfil
-                        100% gratuita.</p>
+                <!-- Chamada para Ação Focada -->
+                <div class="hero-actions">
+                    <button class="btn-primary" onclick="openModal('loginModal')">Começar a Planejar ➔</button>
                 </div>
+                <p class="hero-trust-note">Criação de perfil 100% gratuita para viajantes.</p>
             </div>
         </div>
     </section>
@@ -132,28 +129,63 @@
         </div>
     </section>
 
-    <!-- About Us & Values Section -->
-    <section id="sobre" class="about-section" style="background: var(--dark-blue); color: white; padding: 100px 20px;">
-        <div class="section-header">
-            <h2 style="color: white;">Quem Somos e <span class="text-highlight">Nossos Valores</span></h2>
-            <p style="color: rgba(255,255,255,0.8); max-width: 800px; margin: 0 auto;">Na Plango, não apenas planejamos viagens; criamos conexões humanas e memórias inesquecíveis. Nossa missão é democratizar o planejamento inteligente, valorizando o que há de mais autêntico em cada destino.</p>
-        </div>
+    <!-- Business Section -->
+    <section id="empresas" class="business-section">
+        <div class="business-container">
+            <div class="business-image">
+                <img src="pousada_img.png" alt="Pousada charmosa">
+                <div class="verified-badge">✓ Empresa Verificada</div>
+            </div>
+            <div class="business-info">
+                <h2>Seja visto por quem realmente quer viajar.</h2>
+                <p>A Plango conecta a sua pousada ou serviço turístico diretamente com clientes que buscam o seu perfil
+                    de negócio, reduzindo custos com publicidade vazia.</p>
 
-        <div class="cards-grid" style="margin-top: 50px;">
-            <div class="feature-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
-                <div class="card-icon" style="background: var(--yellow);">✨</div>
-                <h3 style="color: white;">Autenticidade</h3>
-                <p style="color: rgba(255,255,255,0.7);">Priorizamos pequenos negócios e hospedagens que possuem alma e história, fugindo do óbvio.</p>
-            </div>
-            <div class="feature-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
-                <div class="card-icon" style="background: var(--yellow);">🤝</div>
-                <h3 style="color: white;">Conexão Direta</h3>
-                <p style="color: rgba(255,255,255,0.7);">Eliminamos barreiras entre viajantes e empresas, promovendo negociações humanas e justas.</p>
-            </div>
-            <div class="feature-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
-                <div class="card-icon" style="background: var(--yellow);">🌱</div>
-                <h3 style="color: white;">Sustentabilidade</h3>
-                <p style="color: rgba(255,255,255,0.7);">Apoiamos o turismo local para garantir que as comunidades cresçam junto com cada nova viagem.</p>
+                <ul class="business-list">
+                    <li>
+                        <span class="bullet">🔒</span>
+                        <div>
+                            <strong>Cadastro Estruturado e Seguro</strong>
+                            <span>Processo com verificação de dados. Após validado, crie um perfil autêntico com fotos
+                                reais, diferenciais, serviços e valores base.</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="bullet">🎯</span>
+                        <div>
+                            <strong>Ação Ativa na Demanda Real</strong>
+                            <span>Pare de apenas esperar reservas. Visualize clientes que estão planejando viagens, seus
+                                orçamentos e preferências, e envie propostas ativas.</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="bullet">💬</span>
+                        <div>
+                            <strong>Comunicação e Negociação Direta</strong>
+                            <span>Chat interno para negociar de forma humana. Ajuste valores, inclua serviços e alinhe
+                                expectativas até chegarem a um acordo juntos.</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="bullet">🤖</span>
+                        <div>
+                            <strong>Propostas Inteligentes e Ranking</strong>
+                            <span>Receba sugestões do sistema para ofertas com alta chance de aceite e ganhe destaque
+                                pela compatibilidade com a experiência do viajante.</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="bullet">📊</span>
+                        <div>
+                            <strong>Dados Estratégicos de Mercado</strong>
+                            <span>Acesse as preferências mais buscadas, comportamentos dos usuários e tendências para
+                                ajudar o seu negócio a crescer e se posicionar.</span>
+                        </div>
+                    </li>
+                </ul>
+
+                <button class="btn-primary btn-orange mt-4" onclick="openModal('businessModal')">Cadastrar Minha
+                    Empresa</button>
             </div>
         </div>
     </section>
@@ -171,8 +203,8 @@
                 <!-- User Login -->
                 <form id="user-login-form" class="modal-form active">
                     <h3 class="form-title">Bem-vindo de volta!</h3>
-                    <button type="button" class="btn-social btn-google" onclick="window.location.href='painel-usuario.html'">G Continuar com Google</button>
-                    <button type="button" class="btn-social btn-facebook" onclick="window.location.href='painel-usuario.html'">f Continuar com Facebook</button>
+                    <button type="button" class="btn-social btn-google">G Continuar com Google</button>
+                    <button type="button" class="btn-social btn-facebook">f Continuar com Facebook</button>
                     <div class="divider">ou entre com e-mail</div>
                     <input type="email" class="form-input" placeholder="Seu e-mail" required>
                     <input type="password" class="form-input" placeholder="Sua senha" required>
@@ -190,7 +222,7 @@
                     <input type="password" class="form-input" placeholder="Crie uma senha forte" required>
                     <div class="security-note">🔒 Suas preferências estarão seguras.</div>
                     <button type="button" class="btn-primary w-100 mt-2"
-                        onclick="window.location.href='painel-usuario.html#new'">Criar Conta</button>
+                        onclick="window.location.href='painel-usuario.html'">Criar Conta</button>
                 </form>
             </div>
         </div>

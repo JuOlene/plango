@@ -1,16 +1,15 @@
 /* Variáveis de Cores (Cores Tropicais, Azul, Laranja, Amarelo, Branco) */
 :root {
-    --primary-blue: #00407a;
-    --dark-blue: #003366;
+    --primary-blue: #0A4D80;
     --light-blue: #2392D0;
-    --bg-blue: #f8fbfe;
+    --bg-blue: #E9F4FB;
     --orange: #F26419;
-    --yellow: #f1b217;
+    --yellow: #F6AE2D;
     --white: #FFFFFF;
-    --text-dark: #1a202c;
-    --text-light: #4a5568;
-    --radius: 10px;
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    --text-dark: #2D3748;
+    --text-light: #718096;
+    --radius: 12px;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -27,9 +26,8 @@ body {
 }
 
 h1, h2, h3 {
-    font-family: 'Bodoni Moda', serif;
+    font-family: 'Playfair Display', serif;
     color: var(--primary-blue);
-    font-weight: 700;
 }
 
 .text-orange { color: var(--orange); }
@@ -46,11 +44,10 @@ header {
     position: fixed;
     top: 0;
     width: 100%;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
     z-index: 100;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 .nav-container {
@@ -128,31 +125,45 @@ header {
 
 .btn-login {
     background-color: transparent;
-    border: 1px solid var(--primary-blue);
+    border: 2px solid var(--primary-blue);
     color: var(--primary-blue);
-    padding: 8px 22px;
-    border-radius: 30px;
+    padding: 8px 20px;
+    border-radius: 20px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-family: 'Outfit', sans-serif;
 }
 
 .btn-login:hover {
     background-color: var(--primary-blue);
     color: var(--white);
-    box-shadow: 0 4px 12px rgba(0, 64, 122, 0.2);
 }
 
-.link-biz {
-    color: var(--primary-blue) !important;
-    font-weight: 700 !important;
-    text-decoration: none;
-    transition: opacity 0.2s;
+.btn-business-nav {
+    border-color: var(--orange);
+    color: var(--orange);
 }
 
-.link-biz:hover {
-    opacity: 0.7;
+.btn-business-nav:hover {
+    background-color: var(--orange);
+    color: var(--white);
+}
+
+.btn-secondary-outline {
+    background-color: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: var(--radius);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary-outline:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--white);
 }
 
 /* Hamburger Menu */
@@ -216,7 +227,7 @@ header {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, rgba(0, 64, 122, 0.6) 0%, rgba(0, 64, 122, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(90deg, rgba(10, 77, 128, 0.9) 0%, rgba(10, 77, 128, 0.6) 50%, rgba(255, 255, 255, 0) 100%);
 }
 
 .hero-content {
@@ -236,18 +247,41 @@ header {
 }
 
 .hero-title {
-    font-size: 5rem;
-    line-height: 1.05;
+    font-size: 4rem;
+    line-height: 1.1;
     margin-bottom: 20px;
     color: var(--white);
-    font-weight: 700;
 }
 
 .hero-subtitle {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     margin-bottom: 40px;
-    opacity: 0.95;
-    font-weight: 400;
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+.hero-badge {
+    display: inline-block;
+    background: rgba(246, 174, 45, 0.2);
+    color: var(--yellow);
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    border: 1px solid rgba(246, 174, 45, 0.3);
+}
+
+.hero-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.hero-trust-note {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    font-style: italic;
 }
 
 /* Quiz Container */
@@ -1013,57 +1047,255 @@ section {
     text-align: center;
     margin-bottom: 30px;
 }
-/* AI Loader Animation */
-.ai-loader {
-    width: 60px;
-    height: 60px;
-    border: 5px solid var(--bg-blue);
-    border-top: 5px solid var(--primary-blue);
+
+/* Instagram / Redes Sociais Section */
+.instagram-preview-card {
+    background: white;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    max-width: 400px;
+    margin: 20px auto;
+    border: 1px solid #E2E8F0;
+}
+
+.instagram-header {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.insta-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
     border-radius: 50%;
-    margin: 0 auto;
-    animation: spin 1s linear infinite;
-    position: relative;
+    padding: 2px;
 }
 
-.ai-loader::after {
-    content: '🧠';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.5rem;
+.insta-avatar-inner {
+    width: 100%;
+    height: 100%;
+    background: #eee;
+    border-radius: 50%;
+    border: 2px solid white;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.insta-info h5 {
+    font-family: 'Outfit';
+    font-size: 0.95rem;
+    color: #262626;
+    margin: 0;
 }
 
-@keyframes pulse-ai {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.6; }
+.insta-info span {
+    font-size: 0.8rem;
+    color: #8e8e8e;
 }
 
-.btn-delete {
-    background: none;
+.instagram-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: #efefef;
+    padding: 2px;
+}
+
+.insta-post {
+    aspect-ratio: 1/1;
+    background: #ddd;
+}
+
+.instagram-footer {
+    padding: 15px;
+    text-align: center;
+}
+
+.btn-instagram {
+    background: #0095f6;
+    color: white;
     border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
     cursor: pointer;
-    font-size: 1.1rem;
-    padding: 5px;
-    border-radius: 5px;
-    transition: background 0.2s;
+    width: 100%;
+}
+
+.social-input-group {
+    background: white;
+    padding: 30px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
+}
+
+.social-input-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--primary-blue);
+}
+
+.insta-handle-wrapper {
+    display: flex;
+    align-items: center;
+    background: #F8FAFC;
+    border: 1px solid #CBD5E1;
+    border-radius: var(--radius);
+    padding: 0 15px;
+}
+
+.insta-handle-wrapper span {
+    color: var(--text-light);
+    font-weight: 600;
+    margin-right: 5px;
+}
+
+.insta-handle-wrapper input {
+    border: none;
+    background: transparent;
+    padding: 12px 0;
+    width: 100%;
+    outline: none;
+    font-family: 'Outfit';
+    font-size: 1rem;
+}
+
+/* --- Itinerary & Experience Enhancements --- */
+
+.discount-badge {
+    background: linear-gradient(135deg, #F26419, #F6AE2D);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 10px rgba(242, 100, 25, 0.2);
+}
+
+.coupon-code {
+    background: #EDF2F7;
+    border: 1px dashed var(--primary-blue);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-weight: bold;
+    color: var(--primary-blue);
+}
+
+.transport-tag {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.see-more-section {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out, opacity 0.3s;
+    opacity: 0;
+}
+
+.see-more-section.active {
+    max-height: 2000px;
+    opacity: 1;
+    margin-top: 20px;
+}
+
+.btn-see-more {
+    background: transparent;
+    border: 2px solid var(--primary-blue);
+    color: var(--primary-blue);
+    width: 100%;
+    padding: 10px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 10px;
 }
 
-.btn-delete:hover {
-    background: #FEE2E2;
+.btn-see-more:hover {
+    background: var(--primary-blue);
+    color: white;
 }
 
-[contenteditable="true"]:focus, input:focus {
-    outline: none;
-    background: rgba(226, 232, 240, 0.3) !important;
+.experience-card-mini {
+    background: white;
+    border: 1px solid #E2E8F0;
+    border-radius: var(--radius);
+    padding: 15px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 10px;
+    transition: 0.3s;
+}
+
+.experience-card-mini:hover {
+    border-color: var(--yellow);
+    box-shadow: var(--shadow);
+}
+
+.experience-icon {
+    font-size: 1.5rem;
+    width: 50px;
+    height: 50px;
+    background: var(--bg-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.time-label {
+    font-weight: 800;
+    color: var(--orange);
+    min-width: 60px;
+}
+
+.housing-option-card {
+    border: 2px solid #E2E8F0;
+    border-radius: var(--radius);
+    padding: 15px;
+    margin-top: 10px;
+}
+
+.housing-option-card.recommended {
+    border-color: #27AE60;
+    background: #F0FFF4;
+}
+
+.housing-badge {
+    background: #27AE60;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.tag-mini {
+    background: var(--bg-blue);
+    color: var(--primary-blue);
+    padding: 2px 6px;
     border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
 }
