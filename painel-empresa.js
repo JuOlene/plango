@@ -86,8 +86,58 @@ function showToast(title, message) {
 }
 
 // Automação e Gerador de Pacotes
+function openPackageModal() {
+    document.getElementById('packageModal').style.display = 'flex';
+}
+
+function closePackageModal() {
+    document.getElementById('packageModal').style.display = 'none';
+}
+
+function saveNewPackage() {
+    const name = document.getElementById('pkg-name').value;
+    const cat = document.getElementById('pkg-cat').value;
+    const dur = document.getElementById('pkg-dur').value;
+    const desc = document.getElementById('pkg-desc').value;
+    const price = document.getElementById('pkg-price').value;
+
+    if(!name || !price) {
+        showToast("Atenção", "Preencha ao menos o nome e o preço do pacote.");
+        return;
+    }
+
+    const grid = document.getElementById('packages-grid');
+    if(!grid) return;
+
+    const newCard = document.createElement('div');
+    newCard.className = 'day-card';
+    newCard.style.borderLeftColor = 'var(--orange)';
+    newCard.style.animation = 'fadeIn 0.5s';
+    newCard.innerHTML = `
+        <div style="display:flex; justify-content:space-between;">
+            <h4>${name}</h4>
+            <span class="tag" style="font-size:0.75rem; padding:3px 8px;">${cat}</span>
+        </div>
+        <p class="text-light mt-2" style="font-size:0.9rem;"><strong>${dur}</strong> — ${desc || 'Nova proposta criada sob medida.'}</p>
+        <div style="display:flex; justify-content:space-between; margin-top:15px; align-items:center;">
+            <span style="font-weight:bold;">R$ ${parseFloat(price).toLocaleString('pt-BR')}</span>
+            <span class="tag" style="background:#E2E8F0; color:var(--text-dark);">0 vendas</span>
+        </div>
+    `;
+
+    grid.prepend(newCard);
+
+    closePackageModal();
+    showToast("Proposta Criada!", `A oferta "${name}" foi adicionada ao seu catálogo e está pronta para receber Matches com viajantes.`);
+    
+    // Limpar campos
+    document.getElementById('pkg-name').value = '';
+    document.getElementById('pkg-desc').value = '';
+    document.getElementById('pkg-price').value = '';
+}
+
 function simulatePackageCreation() {
-    showToast("Pacote Criado!", "Sua nova experiência foi adicionada ao catálogo. O sistema começará a fazer Match com clientes.");
+    showToast("Template Usado!", "Sua nova experiência (Fim de Semana Romântico) foi gerada e adicionada. O sistema começará a fazer Match com clientes.");
 }
 
 function triggerAutomationToast() {

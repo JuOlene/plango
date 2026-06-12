@@ -347,12 +347,12 @@
                     <p class="text-light mt-2 mb-4">Escolha um modelo inteligente ou crie do zero.</p>
                     <div style="display:flex; justify-content:center; gap:20px;">
                         <button class="btn-secondary" onclick="simulatePackageCreation()">🪄 Usar Template "Fim de Semana Romântico"</button>
-                        <button class="btn-primary" onclick="simulatePackageCreation()">+ Criar do Zero</button>
+                        <button class="btn-primary" onclick="openPackageModal()">+ Criar do Zero</button>
                     </div>
                 </div>
 
                 <h4>Seus Pacotes Ativos</h4>
-                <div class="grid-2 mt-2">
+                <div class="grid-2 mt-2" id="packages-grid">
                     <div class="day-card" style="border-left-color: var(--primary-blue);">
                         <h4>Especial Gastronomia</h4>
                         <p class="text-light mt-2">Hospedagem 2 noites + Jantar Completo</p>
@@ -369,24 +369,52 @@
                 <h3>Relacionamento e Negociações 💬</h3>
                 <p class="text-light" style="margin-bottom: 20px;">Converse diretamente com o cliente e ajuste os pacotes para fechar negócio.</p>
                 
-                <div class="chat-container">
-                    <div class="chat-header">
-                        <div>
-                            <h3 style="color: white; margin-bottom:5px;" id="chat-title">Nenhuma negociação selecionada</h3>
-                            <span style="font-size:0.8rem; opacity:0.8;">Selecione um cliente em Demandas</span>
+                <div style="display:flex; gap:20px; height:500px;">
+                    <!-- Histórico de Clientes -->
+                    <div style="width: 280px; background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow); display:flex; flex-direction:column; overflow:hidden;">
+                        <div style="padding:15px; background:#F8FAFC; border-bottom:1px solid #E2E8F0; font-weight:600; color:var(--primary-blue);">
+                            Histórico de Negociações
                         </div>
-                        <button class="btn-secondary" style="padding: 5px 15px;">Finalizar Acordo</button>
-                    </div>
-                    
-                    <div class="chat-messages" id="chat-history">
-                        <div style="text-align:center; color:var(--text-light); margin-top:50px;">
-                            Suas conversas ativas aparecerão aqui.
+                        <div style="flex:1; overflow-y:auto; padding:10px; display:flex; flex-direction:column; gap:5px;">
+                            <div style="padding:10px; border-radius:8px; background:var(--bg-blue); border-left:3px solid var(--primary-blue); cursor:pointer;" onclick="startChat('Ana C.')">
+                                <div style="font-weight:600; color:var(--text-dark); font-size:0.95rem;">Ana C.</div>
+                                <div style="font-size:0.8rem; color:var(--text-light);">Há 2 horas</div>
+                            </div>
+                            <div style="padding:10px; border-radius:8px; border:1px solid transparent; cursor:pointer;" onmouseover="this.style.background='#F1F5F9'" onmouseout="this.style.background='transparent'" onclick="startChat('Marcelo T.')">
+                                <div style="font-weight:600; color:var(--text-dark); font-size:0.95rem;">Marcelo T.</div>
+                                <div style="font-size:0.8rem; color:var(--text-light);">Ontem</div>
+                            </div>
+                            <div style="padding:10px; border-radius:8px; border:1px solid transparent; cursor:pointer;" onmouseover="this.style.background='#F1F5F9'" onmouseout="this.style.background='transparent'" onclick="startChat('Luciana Mendes')">
+                                <div style="font-weight:600; color:var(--text-dark); font-size:0.95rem;">Luciana Mendes</div>
+                                <div style="font-size:0.8rem; color:var(--text-light);">Há 3 dias (Fechado)</div>
+                            </div>
+                            <div style="padding:10px; border-radius:8px; border:1px solid transparent; cursor:pointer;" onmouseover="this.style.background='#F1F5F9'" onmouseout="this.style.background='transparent'" onclick="startChat('Carlos Souza')">
+                                <div style="font-weight:600; color:var(--text-dark); font-size:0.95rem;">Carlos Souza</div>
+                                <div style="font-size:0.8rem; color:var(--text-light);">Na semana passada</div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="chat-input">
-                        <input type="text" id="msg-input" placeholder="Envie sua proposta, tire dúvidas ou ofereça brindes...">
-                        <button class="btn-primary" onclick="sendMessage()">Enviar</button>
+                    <!-- Janela Principal de Chat -->
+                    <div class="chat-container" style="flex:1; height:100%;">
+                        <div class="chat-header">
+                            <div>
+                                <h3 style="color: white; margin-bottom:5px;" id="chat-title">Relacionamento: Ana C.</h3>
+                                <span style="font-size:0.8rem; opacity:0.8;">Online agora</span>
+                            </div>
+                            <button class="btn-secondary" style="padding: 5px 15px;">Finalizar Acordo</button>
+                        </div>
+                        
+                        <div class="chat-messages" id="chat-history">
+                            <div class="message msg-client">
+                                <strong>Intenção do Sistema (Match):</strong> Olá! A Ana C. está planejando uma viagem e o perfil tem alta aderência com o seu negócio. Destaque seus serviços para converter a venda!
+                            </div>
+                        </div>
+
+                        <div class="chat-input">
+                            <input type="text" id="msg-input" placeholder="Envie sua proposta, tire dúvidas ou ofereça brindes...">
+                            <button class="btn-primary" onclick="sendMessage()">Enviar</button>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -515,6 +543,52 @@
             </section>
 
         </main>
+    </div>
+
+    <!-- Package Modal -->
+    <div id="packageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; align-items:center; justify-content:center;">
+        <div style="background:var(--white); padding:30px; border-radius:var(--radius); width:90%; max-width:500px; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+            <h3 style="margin-bottom:20px; color:var(--primary-blue);">Criar Nova Oferta</h3>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display:block; font-weight:600; margin-bottom:5px;">Nome da Oferta / Pacote</label>
+                <input type="text" id="pkg-name" placeholder="Ex: Fim de Semana Radical" style="width:100%; padding:10px; border:1px solid #CBD5E1; border-radius:8px; font-family:'Outfit'; outline:none;">
+            </div>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+                <div>
+                    <label style="display:block; font-weight:600; margin-bottom:5px;">Categoria</label>
+                    <select id="pkg-cat" style="width:100%; padding:10px; border:1px solid #CBD5E1; border-radius:8px; font-family:'Outfit'; outline:none;">
+                        <option value="Hospedagem">Hospedagem</option>
+                        <option value="Gastronomia">Gastronomia</option>
+                        <option value="Aventura">Aventura</option>
+                        <option value="Combo">Combo Completo</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block; font-weight:600; margin-bottom:5px;">Duração</label>
+                    <select id="pkg-dur" style="width:100%; padding:10px; border:1px solid #CBD5E1; border-radius:8px; font-family:'Outfit'; outline:none;">
+                        <option value="Diária">Diária</option>
+                        <option value="2 Dias">Fim de Semana (2 Dias)</option>
+                        <option value="3 Dias">3 Dias</option>
+                        <option value="7 Dias">1 Semana</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display:block; font-weight:600; margin-bottom:5px;">O que está incluso?</label>
+                <textarea id="pkg-desc" placeholder="Descreva os itens inclusos. Ex: Café da manhã, Wi-fi, Passeio de lancha, Drink de boas vindas..." style="width:100%; padding:10px; border:1px solid #CBD5E1; border-radius:8px; font-family:'Outfit'; outline:none; height:80px; resize:none;"></textarea>
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+                <label style="display:block; font-weight:600; margin-bottom:5px;">Preço Total (R$)</label>
+                <input type="number" id="pkg-price" placeholder="Ex: 850" style="width:100%; padding:10px; border:1px solid #CBD5E1; border-radius:8px; font-family:'Outfit'; outline:none;">
+            </div>
+            
+            <button class="btn-primary w-100" onclick="saveNewPackage()">Salvar Oferta</button>
+            <button class="btn-secondary w-100 mt-2" onclick="closePackageModal()">Cancelar</button>
+        </div>
     </div>
 
     <div id="toast-container" class="toast-container"></div>
